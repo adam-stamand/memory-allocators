@@ -1,6 +1,8 @@
 # Sphinx build folder
 
-
+build/
+html/
+xml/
 # Compiled source #
 ###################
 *.com
@@ -35,7 +37,6 @@
 ehthumbs.db
 Icon?
 Thumbs.db
-
 # Editor backup files #
 #######################
 *~
