@@ -45,3 +45,7 @@ CTestTestfile.cmake
 _deps
 
 #Mine
+build/
+_build/
+.gcc-flags.json
+CMakeSettings.json
