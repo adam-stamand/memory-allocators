@@ -8,9 +8,7 @@ public:
 
   void TestFunc(int num){
     num = 4 + 6;
-  }ewre
-fasdf
-
+  }
 };
 
 #endif

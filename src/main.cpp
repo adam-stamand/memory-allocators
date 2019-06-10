@@ -6,9 +6,8 @@
 int main(void){
   puts("SDFSDFSDF");
   TestClass test;
-  int * pointer;
-  test.TestFunc(34);erwe
-  int temp = *pointer;
+  test.TestFunc(30);
   spdlog::info("Hello, {}!", "World");
+  while (1);
   return 0;
 }

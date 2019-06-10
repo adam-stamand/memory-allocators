@@ -19,7 +19,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 include_directories(include)
 include_directories(include/spdlog/include)
 
-file(GLOB SOURCES "/home/adams/memory-allocators/src/*.cpp")
+file(GLOB SOURCES "src/*.cpp")
 message("  Sources: '${SOURCES}'")
 add_executable(memory_allocator ${SOURCES})
 
