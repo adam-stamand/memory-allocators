@@ -26,12 +26,3 @@ add_executable(memory_allocator ${SOURCES})
 
 
 
-
-
-#set(SOURCES "C:/cygwin64/home/adams/memory-allocators/src/main.cpp")
-#message("Before 'project':")
-
-
-
-#add_executable(memory_allocator /src/)
-#add_executable(memory_allocator C:/cygwin64/home/adams/memory-allocators/src/main.cpp)
