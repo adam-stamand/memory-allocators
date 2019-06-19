@@ -18,6 +18,8 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
 include_directories(include)
 include_directories(include/spdlog/include)
+include_directories(utils/spdlog/include)
+include_directories(utils)
 
 file(GLOB SOURCES "src/*.cpp")
 message("  Sources: '${SOURCES}'")

@@ -1,14 +1,25 @@
-#ifndef LINEAR_ALLOCATOR_H
-#define LINEAR_ALLOCATOR_H
+#pragma once
 
-class TestClass
+
+#include "BaseAllocator.h"
+
+
+
+namespace alloc{
+
+class LinearAllocator : public BaseAllocator
 {
 public:
-  TestClass(){}
+  LinearAllocator(size_t size);
+  virtual ~LinearAllocator();
 
-  void TestFunc(int num){
-    num = 4 + 6;
-  }
+  void * Allocate(size_t size);
+  void Deallocate(void * ptr);
+
+private:
+  void Clear();
+
 };
 
-#endif
+}
+
