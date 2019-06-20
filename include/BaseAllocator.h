@@ -11,7 +11,7 @@ public:
     BaseAllocator();
     virtual ~BaseAllocator();
     
-    virtual void * Allocate(size_t size) = 0;
+    virtual void * Allocate(size_t size, uint8_t alignment) = 0;
     virtual void Deallocate(void * ptr) = 0;
 
     size_t GetSize();

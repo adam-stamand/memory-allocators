@@ -16,6 +16,17 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g")
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
+# Locate GTest
+# set(GTEST_ROOT "/usr/local/include" CACHE PATH "Path to googletest")
+# set (GTEST_ROOT "/usr/local/include/gtest")
+# find_package(GTest REQUIRED)
+include_directories(/usr/local/include/gtest)
+ 
+# Link runTests with what we want to test and the GTest and pthread library
+add_executable(runTests test/test.cpp)
+target_link_libraries(runTests /usr/local/lib/libgtest.a pthread)
+
+
 include_directories(include)
 include_directories(include/spdlog/include)
 include_directories(utils/spdlog/include)

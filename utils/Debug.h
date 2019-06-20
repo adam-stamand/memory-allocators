@@ -6,9 +6,11 @@
 
 
 #define ASSERT1(cond) assert(cond)
-#define ASSERT2(cond, message) assert(message && cond)
+#define ASSERT2(cond, message) \
+    SPDLOG_CRITICAL(message); \
+    assert((message) && (cond))
+    
 
 #define GET_ASSERT_MACRO(_1,_2,NAME,...) NAME
-#define ASSERT(...) \
-    GET_ASSERT_MACRO(__VA_ARGS__, ASSERT2, ASSERT1)(__VA_ARGS__)
+#define ASSERT(...) GET_ASSERT_MACRO(__VA_ARGS__, ASSERT2, ASSERT1)(__VA_ARGS__)
 
