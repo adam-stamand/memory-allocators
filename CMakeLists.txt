@@ -11,8 +11,8 @@ set(CMAKE_CXX_STANDARD 11)
 project (memory_allocator_proj)
 
 if (NOT WIN32)
-  set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
-
+  # set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
+  list(APPEND CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
   find_package (gtest REQUIRED)
   find_package (Threads)
   include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
