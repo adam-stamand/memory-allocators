@@ -60,18 +60,6 @@ before_install:
   - which valgrind
   - cd "${TRAVIS_BUILD_DIR}"
 before_script:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y libgtest-dev valgrind cmake
-  - sudo wget https://github.com/google/googletest/archive/release-1.7.0.tar.gz
-  - sudo tar xf release-1.7.0.tar.gz
-  - cd googletest-release-1.7.0
-  - sudo cmake -DBUILD_SHARED_LIBS=ON .
-  - sudo make
-  - sudo cp -a include/gtest /usr/include
-  - sudo cp -a libgtest_main.so libgtest.so /usr/lib/
-  - which valgrind
-  - cd "${TRAVIS_BUILD_DIR}"
-before_script:
   # Check versions of gcc, g++ and cmake
   - gcc -v && g++ -v && cmake --version
   # Run your build commands next
@@ -81,12 +69,15 @@ before_script:
       --warn-uninitialized \
       -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
       -DCMAKE_CXX_STANDARD=$CPP
+  - ./configure --enable-gcov
   - cmake --build .
   - cd bin
   - ls -l
 script:
   - ./runTests
   - valgrind ./memory_allocator
+after_success:
+  - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
 notifications:
   email:
     on_success: never
