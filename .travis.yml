@@ -85,8 +85,8 @@ before_script:
   - cd bin
   - ls -l
 script:
-  - runTests
-  - valgrind memory_allocator
+  - ./runTests
+  - valgrind ./memory_allocator
 notifications:
   email:
     on_success: never
