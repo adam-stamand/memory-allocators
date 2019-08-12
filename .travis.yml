@@ -59,7 +59,7 @@ before_install:
   - sudo cp -a libgtest_main.so libgtest.so /usr/lib/
   - which valgrind
   - cd "${TRAVIS_BUILD_DIR}"
-   - pip install --user cpp-coveralls
+  - pip install --user cpp-coveralls
 before_script:
   # Check versions of gcc, g++ and cmake
   - gcc -v && g++ -v && cmake --version
