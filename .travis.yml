@@ -59,6 +59,7 @@ before_install:
   - sudo cp -a libgtest_main.so libgtest.so /usr/lib/
   - which valgrind
   - cd "${TRAVIS_BUILD_DIR}"
+   - pip install --user cpp-coveralls
 before_script:
   # Check versions of gcc, g++ and cmake
   - gcc -v && g++ -v && cmake --version
@@ -69,7 +70,6 @@ before_script:
       --warn-uninitialized \
       -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
       -DCMAKE_CXX_STANDARD=$CPP
-  - ./configure --enable-gcov
   - cmake --build .
   - cd bin
   - ls -l
