@@ -7,7 +7,7 @@ FATAL: In-source builds are not allowed.
        (cd into build/ and run $cmake ..)
 ")
 endif()
-
+set(CMAKE_CXX_STANDARD 11)
 project (memory_allocator_proj)
 
 if (NOT WIN32)
@@ -22,7 +22,7 @@ else(NOT WIN32)
 endif (NOT WIN32)
 
 
-set(CMAKE_CXX_STANDARD 11)
+
 
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
