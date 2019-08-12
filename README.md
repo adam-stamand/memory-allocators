@@ -1,4 +1,5 @@
 ## Memory Allocators
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4a0d9fba79e54da3af6d254157237959)](https://app.codacy.com/app/adam-stamand/memory-allocators?utm_source=github.com&utm_medium=referral&utm_content=adam-stamand/memory-allocators&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/adam-stamand/memory-allocators.svg?branch=master)](https://travis-ci.org/adam-stamand/memory-allocators)
 [![Coverage Status](https://coveralls.io/repos/github/adam-stamand/memory-allocators/badge.svg)](https://coveralls.io/github/adam-stamand/memory-allocators)
 [![GitHub issues](https://img.shields.io/github/issues/adam-stamand/memory-allocators)](https://github.com/adam-stamand/memory-allocators/issues)
