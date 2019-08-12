@@ -77,6 +77,7 @@ script:
   - ./runTests
   - valgrind ./memory_allocator
 after_success:
+  - cd ..
   - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
 notifications:
   email:
