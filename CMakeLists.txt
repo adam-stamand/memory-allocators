@@ -10,6 +10,12 @@ endif()
 
 project (memory_allocator_proj)
 
+if (WIN32)
+include(gtest.cmake)
+find_package (Threads)
+target_link_libraries(... gtest ${CMAKE_THREAD_LIBS_INIT})
+endif (WIN32)
+
 
 set(CMAKE_CXX_STANDARD 11)
 
