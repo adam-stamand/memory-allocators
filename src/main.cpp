@@ -10,10 +10,11 @@ int main(void){
 
   // TODO Figure out special functions
   LinearAllocator linAlloc(0x1000);
-
+  
   // TODO use smart pointers? Typecast more smartly
   int * my_arr1 = (int*)linAlloc.Allocate(sizeof(int)*10, alignof(int));
   int * my_arr2 = (int*)linAlloc.Allocate(sizeof(double)*200, alignof(double));
+
 
   // TODO Move to GoogleTest
   for (int i = 0; i < 10; i++){

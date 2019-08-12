@@ -1,8 +1,16 @@
+#include "Debug.h"
 #include "LinearAllocator.h"
 #include <gtest/gtest.h>
  
 TEST(LinearAllocatorTest, Allocate) { 
-    ASSERT_EQ(1,1);
+    alloc::LinearAllocator linTest(0x1000);
+    void * ptr = nullptr;
+    ptr = linTest.Allocate(sizeof(int)*100, alignof(int));
+    ASSERT_NE(ptr,nullptr);
+    ptr = linTest.Allocate(sizeof(long double)*100, alignof(long double));
+    ASSERT_NE(ptr,nullptr);
+    ptr = linTest.Allocate(sizeof(float)*0x1000, alignof(float));
+    ASSERT_EQ(ptr,nullptr);
 }
  
 TEST(LinearAllocatorTest, Deallocate) {
