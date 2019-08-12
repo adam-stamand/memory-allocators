@@ -12,7 +12,9 @@ project (memory_allocator_proj)
 
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g")
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g")
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
@@ -20,11 +22,11 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 # set(GTEST_ROOT "/usr/local/include" CACHE PATH "Path to googletest")
 # set (GTEST_ROOT "/usr/local/include/gtest")
 # find_package(GTest REQUIRED)
-include_directories(/usr/local/include/gtest)
+# include_directories(C:/Users/adams/gtest/googletest/include/gtest)
  
 # Link runTests with what we want to test and the GTest and pthread library
-add_executable(runTests test/test.cpp)
-target_link_libraries(runTests /usr/local/lib/libgtest.a pthread)
+# add_executable(runTests test/test.cpp)
+# target_link_libraries(runTests C:/Users/adams/gtest/googletest/build/Debug/gtestd.lib)
 
 
 include_directories(include)
