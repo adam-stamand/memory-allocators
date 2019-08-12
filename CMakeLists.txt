@@ -10,17 +10,19 @@ endif()
 
 project (memory_allocator_proj)
 
-if (WIN32)
-include(gtest.cmake)
-find_package (Threads)
-target_link_libraries(... gtest ${CMAKE_THREAD_LIBS_INIT})
-endif (WIN32)
+if (NOT WIN32)
+  include(gtest.cmake)
+  find_package (Threads)
+  target_link_libraries(... gtest ${CMAKE_THREAD_LIBS_INIT})
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g")
+else(NOT WIN32)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+  include_directories(C:/Users/adams/gtest/googletest/include)
+endif (NOT WIN32)
 
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g")
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
@@ -33,7 +35,6 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 include_directories(include)
 include_directories(utils/spdlog/include)
 include_directories(utils)
-include_directories(C:/Users/adams/gtest/googletest/include)
 
 file(GLOB SOURCES "src/*.cpp")
 message("  Sources: '${SOURCES}'")
