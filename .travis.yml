@@ -1,45 +1,99 @@
-dist: trusty
-sudo: false
 language: cpp
-  
-# script:
-#   - cmake .
-#   - cmake --build .
-compiler:
-  - gcc
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-6
-      - g++-6
-      - cmake
-script:
-  # Link gcc-6 and g++-6 to their standard commands
-  - ln -s /usr/bin/gcc-6 /usr/local/bin/gcc
-  - ln -s /usr/bin/g++-6 /usr/local/bin/g++
-  # Export CC and CXX to tell cmake which compiler to use
-  - export CC=/usr/bin/gcc-6
-  - export CXX=/usr/bin/g++-6
+
+
+matrix:
+  include:
+    
+  - os: linux
+    dist: trusty
+    compiler: gcc
+    env:
+      - COMPILER=g++-4.8
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test']
+        packages: [g++-4.8, valgrind]
+  - os: linux
+    dist: trusty
+    compiler: gcc
+    env:
+      - COMPILER=g++-4.9
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test']
+        packages: [g++-4.9, valgrind]
+  - os: linux
+    dist: trusty
+    compiler: gcc
+    env:
+      - COMPILER=g++-5
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test']
+        packages: [g++-5, valgrind]
+  - os: linux
+    dist: trusty
+    compiler: gcc
+    env:
+      - COMPILER=g++-6
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test']
+        packages: [g++-6, valgrind]
+  - os: linux
+    dist: trusty
+    compiler: gcc
+    env:
+      - COMPILER=g++-7
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test']
+        packages: [g++-7, valgrind]
+
+
+
+
+before_install:
+ - sudo apt-get -qq update
+ - sudo apt-get install -y libgtest-dev valgrind cmake
+ - sudo wget https://github.com/google/googletest/archive/release-1.7.0.tar.gz
+ - sudo tar xf release-1.7.0.tar.gz
+ - cd googletest-release-1.7.0
+ - sudo cmake -DBUILD_SHARED_LIBS=ON .
+ - sudo make
+ - sudo cp -a include/gtest /usr/include
+ - sudo cp -a libgtest_main.so libgtest.so /usr/lib/
+ - which valgrind
+ - cd "${TRAVIS_BUILD_DIR}"
+before_script:
   # Check versions of gcc, g++ and cmake
   - gcc -v && g++ -v && cmake --version
   # Run your build commands next
-  - cd ${TRAVIS_BUILD_DIR}
   - mkdir -p build && cd build
   - |
     cmake .. \
       --warn-uninitialized \
       -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
-      -DCMAKE_CXX_STANDARD=$CPP \
-      -DSPDLOG_BUILD_EXAMPLES=ON \
-      -DSPDLOG_BUILD_BENCH=OFF \
-      -DSPDLOG_BUILD_TESTS=ON \
-      -DSPDLOG_SANITIZE_ADDRESS=$ASAN \
-      -DSPDLOG_SANITIZE_THREAD=$TSAN
+      -DCMAKE_CXX_STANDARD=$CPP
   - cmake --build .
   - cd bin
-  - runTests
+ - ls -l
+
+ script:
+
+
+  - runTests && valgrind memory_allocator
+branches:
+  only:
+    - master
+    - develop
+notifications:
+  email:
+    on_success: never
+    on_failure: change
+
+
+
 
 # addons: &gcc48
 #   apt:
