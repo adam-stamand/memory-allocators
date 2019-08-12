@@ -14,7 +14,6 @@ if (NOT WIN32)
   message("Building for non Win32")
   include(gtest.cmake)
   find_package (Threads)
-  target_link_libraries(... gtest ${CMAKE_THREAD_LIBS_INIT})
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g")
 else(NOT WIN32)
   message("Building for Win32")
@@ -44,8 +43,13 @@ add_executable(memory_allocator ${SOURCES})
 
 file(GLOB SOURCES "src/LinearAllocator.cpp" "test/test.cpp" "src/BaseAllocator.cpp")
 add_executable(runTests ${SOURCES})
-target_link_libraries(runTests C:/Users/adams/gtest/googletest/build/Debug/gtestd.lib)
 
+
+if (NOT WIN32)
+  target_link_libraries(runTests gtest ${CMAKE_THREAD_LIBS_INIT})
+else (NOT WIN32)
+  target_link_libraries(runTests C:/Users/adams/gtest/googletest/build/Debug/gtestd.lib)
+endif (NOT WIN32)
 
 
 
