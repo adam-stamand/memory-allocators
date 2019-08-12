@@ -15,7 +15,7 @@ addons:
     notification_email: adam.stamand@gmail.com
     build_command_prepend: "mkdir -p build && cd build && cmake ../"
     build_command: "cmake . --build"
-    branch_pattern: coverity_scan
+    branch_pattern: master
 
 
 matrix:
@@ -98,7 +98,7 @@ script:
   - valgrind ./memory_allocator
 after_success:
   - cd ..
-  - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
+  # - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
 notifications:
   email:
     on_success: never
