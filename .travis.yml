@@ -8,15 +8,6 @@ env:
    - secure: "FA4ymfSLZHjQSjnJ+jeTmXqBmaLmSHa5iVvSoLthlulp8OCtxQecYDB1Lu/ipgehH4P2Bhh3rlJcsskBzhsajrAMgTm2h2ARVRPf+1v3ZH6+ierMxUwoUYvsBrEX0lz8tIz3RBgpRCFmxYL7ou5w01sxK+IfuRXrsrnE7YT7FYchj2A7icTDvqOvaYym96W1KqOYk84j6i4AVF8h6ayp75WVE9qwrVe72FgjH38apr9SaUlFiVqa0IMqxaW/Z/7iGeLcwF9H/3isL8FP1mzyf+HlGk17iQLHN8MUXhh8fCeYRoWVDQ+sWhUVT7VOwNWzN8r7ud4OSTQsVSHxRtVeyx2B49ddTDXyE2bgAxCxeL2mlHr1l1B9NtXPqf91MSzjsPYhgJxcVn7LdZvXUuCIBXGout1VjrA609cGiOTTG1txJmR9vk+d+Voodz0GLkf9yTsjieoIXEtGczD52Tz0t3mdnWe/shV/OdWrris9fnnICTysJsbF6e5PH5J2L2l4bslKE7BNO6y5gIKQR7ns9eGo4EHedpNpS+WwG0LCOzF6DK8pADzOZvtHu25VzX3CnnPpZh17/HUsKbNboQn09XZpJ2rQQ82bRJWzTkEmVsl19KcDx0+sm1DtoLE3Fxff0T64sBZw2k4MiTOtyY2qqmoBhkrnfn3LGOO8XiBks1M="
 
 
-addons:
-  coverity_scan:
-    project:
-      name: "adam-stamand/memory-allocators"
-    notification_email: adam.stamand@gmail.com
-    build_command_prepend: "mkdir -p build && cd build && cmake ../"
-    build_command: "cmake . --build"
-    branch_pattern: master
-
 
 matrix:
   include:
@@ -65,7 +56,13 @@ matrix:
       apt:
         sources: ['ubuntu-toolchain-r-test']
         packages: [g++-7, valgrind]
-
+      coverity_scan:
+        project:
+          name: "adam-stamand/memory-allocators"
+        notification_email: adam.stamand@gmail.com
+        build_command_prepend: "mkdir -p build && cd build && cmake ../"
+        build_command: "cmake . --build"
+        branch_pattern: master
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y libgtest-dev valgrind cmake
