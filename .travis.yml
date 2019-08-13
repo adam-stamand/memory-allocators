@@ -60,9 +60,10 @@ matrix:
         project:
           name: "adam-stamand/memory-allocators"
         notification_email: adam.stamand@gmail.com
-        build_command_prepend: "mkdir -p build && cd build && cmake ../"
-        build_command: "cmake . --build"
+        build_command_prepend: "cmake ."
+        build_command: "cmake  --build build/"
         branch_pattern: master
+
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y libgtest-dev valgrind cmake
