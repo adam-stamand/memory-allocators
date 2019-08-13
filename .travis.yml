@@ -89,9 +89,10 @@ before_script:
       -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
       -DCMAKE_CXX_STANDARD=$CPP
   - cmake --build .
+
+script:
   - cd bin
   - ls -l
-script:
   - ./runTests
   - valgrind ./memory_allocator
 after_success:
