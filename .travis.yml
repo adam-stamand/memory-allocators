@@ -63,7 +63,7 @@ matrix:
           name: "adam-stamand/memory-allocators"
         notification_email: adam.stamand@gmail.com
         build_command_prepend: ""
-        build_command: ""
+        build_command: "cmake --build ."
         branch_pattern: master
 
 before_install:
