@@ -74,7 +74,7 @@ matrix:
     after_success:
       - cd ..
       - ls
-      - coveralls  --exclude-pattern ".*automoc\.cpp" --exclude-pattern ".*\.moc" --exclude-pattern "/opt/.*"  --exclude-pattern ".*moc_.*" --exclude-pattern ".*ui_.*" --exclude-pattern ".*qrc_.*"  --gcov-options '\-lp'
+      - coveralls   --gcov-options '\-lp'
     addons:
       apt:
         sources: ['ubuntu-toolchain-r-test']
