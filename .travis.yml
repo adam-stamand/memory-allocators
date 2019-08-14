@@ -73,7 +73,7 @@ matrix:
       - COMPILER=g++-7
     after_success:
       - cd ..
-      - coveralls --include src --include include  --gcov-options '\-lp'
+      - coveralls --exclude CMakeFiles --exclude mmc_updater  --exclude utils --exclude src/main.cpp --exclude-pattern ".*automoc\.cpp" --exclude-pattern ".*\.moc" --exclude-pattern "/opt/.*" --exclude-pattern "/usr/.*" --exclude-pattern ".*moc_.*" --exclude-pattern ".*ui_.*" --exclude-pattern ".*qrc_.*"  --gcov-options '\-lp'
     addons:
       apt:
         sources: ['ubuntu-toolchain-r-test']
