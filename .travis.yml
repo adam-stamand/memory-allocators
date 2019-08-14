@@ -18,8 +18,8 @@ matrix:
     before_script:
       - ls
     script:
-      - chmod +x ./script/build.sh # or do this locally and commit
-      - ./script/build.sh
+      - chmod +x ./scripts/build.sh # or do this locally and commit
+      - ./scripts/build.sh
     addons:
       apt:
         sources: ['ubuntu-toolchain-r-test']
@@ -32,8 +32,8 @@ matrix:
     before_script:
       - ls
     script:
-      - chmod +x ./script/build.sh # or do this locally and commit
-      - ./script/build.sh
+      - chmod +x ./scripts/build.sh # or do this locally and commit
+      - ./scripts/build.sh
     addons:
       apt:
         sources: ['ubuntu-toolchain-r-test']
@@ -46,8 +46,8 @@ matrix:
     before_script:
       - ls
     script:
-      - chmod +x ./script/build.sh # or do this locally and commit
-      - ./script/build.sh
+      - chmod +x ./scripts/build.sh # or do this locally and commit
+      - ./scripts/build.sh
     addons:
       apt:
         sources: ['ubuntu-toolchain-r-test']
@@ -60,8 +60,8 @@ matrix:
     before_script:
       - ls
     script:
-      - chmod +x ./script/build.sh # or do this locally and commit
-      - ./script/build.sh
+      - chmod +x ./scripts/build.sh # or do this locally and commit
+      - ./scripts/build.sh
     addons:
       apt:
         sources: ['ubuntu-toolchain-r-test']
