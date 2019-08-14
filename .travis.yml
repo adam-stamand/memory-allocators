@@ -74,7 +74,8 @@ matrix:
     after_success:
       - cd ..
       - ls
-      - coveralls   --gcov-options '\-lp'
+      - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
+      - coveralls --gcov-options '\-lp'
     addons:
       apt:
         sources: ['ubuntu-toolchain-r-test']
