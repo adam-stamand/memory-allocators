@@ -11,6 +11,7 @@ endif()
 
 
 set(PROJECT_NAME memory_allocators)
+set(gtest_force_shared_crt TRUE)
 project(${PROJECT_NAME})
 # After project(..) is called, the following variables are available:
 # * PROJECT_SOURCE_DIR - Top level source directory for the project
@@ -55,6 +56,8 @@ include_directories(include)
 include_directories(utils/spdlog/include)
 include_directories(utils)
 include_directories(utils/gtest/googletest/include)
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+ 
 
 
 file(GLOB SOURCES "src/*.cpp")
@@ -71,8 +74,7 @@ enable_testing()
 add_executable(memory_allocator ${SOURCES})
 add_executable(runTests ${TEST_SOURCES})
 
-target_link_libraries(runTests ../utils/gtest/googletest/build/Debug/gtestd)
-
+target_link_libraries(runTests gtest gtest_main)
 
 # Locate GTest
 # set(GTEST_ROOT "/usr/local/include" CACHE PATH "Path to googletest")
