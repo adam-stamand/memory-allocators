@@ -74,7 +74,7 @@ matrix:
     after_success:
       - cd ..
       - ls
-      - coveralls --exclude CMakeFiles --exclude mmc_updater  --exclude utils  --exclude-pattern ".*automoc\.cpp" --exclude-pattern ".*\.moc" --exclude-pattern "/opt/.*" --exclude-pattern "/usr/.*" --exclude-pattern ".*moc_.*" --exclude-pattern ".*ui_.*" --exclude-pattern ".*qrc_.*"  --gcov-options '\-lp'
+      - coveralls --exclude CMakeFiles --exclude mmc_updater   --exclude src/main.cpp --exclude-pattern ".*automoc\.cpp" --exclude-pattern ".*\.moc" --exclude-pattern "/opt/.*" --exclude-pattern "/usr/.*" --exclude-pattern ".*moc_.*" --exclude-pattern ".*ui_.*" --exclude-pattern ".*qrc_.*"  --gcov-options '\-lp'
     addons:
       apt:
         sources: ['ubuntu-toolchain-r-test']
