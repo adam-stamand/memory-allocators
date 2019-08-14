@@ -9,6 +9,8 @@ if(" ${CMAKE_SOURCE_DIR}" STREQUAL " ${CMAKE_BINARY_DIR}")
   ")
 endif()
 
+add_subdirectory(utils/gtest)
+
 project (memory_allocators)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -28,7 +30,9 @@ if (NOT WIN32)
 else(NOT WIN32)
   message("Building for Win32")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
-  include_directories(C:/Users/adams/gtest/googletest/include)
+  # include_directories(C:/Users/adams/gtest/googletest/include)
+  
+  include_directories(utils/gtest/googletest/include)
 endif (NOT WIN32)
 
 
@@ -57,7 +61,8 @@ add_executable(runTests ${SOURCES})
 if (NOT WIN32)
   target_link_libraries(runTests gtest ${CMAKE_THREAD_LIBS_INIT})
 else (NOT WIN32)
-  target_link_libraries(runTests C:/Users/adams/gtest/googletest/build/Debug/gtestd.lib)
+  # target_link_libraries(runTests C:/Users/adams/gtest/googletest/build/Debug/gtestd.lib)
+  target_link_libraries(runTests ../utils/gtest/googletest/build/Debug/gtestd)
 endif (NOT WIN32)
 
 
