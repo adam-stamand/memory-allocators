@@ -15,6 +15,8 @@ matrix:
     compiler: gcc
     env:
       - COMPILER=g++-4.8
+    before_script:
+      - ls
     script:
       - chmod +x ./script/build.sh # or do this locally and commit
       - ./script/build.sh
@@ -27,6 +29,8 @@ matrix:
     compiler: gcc
     env:
       - COMPILER=g++-4.9
+    before_script:
+      - ls
     script:
       - chmod +x ./script/build.sh # or do this locally and commit
       - ./script/build.sh
@@ -39,6 +43,8 @@ matrix:
     compiler: gcc
     env:
       - COMPILER=g++-5
+    before_script:
+      - ls
     script:
       - chmod +x ./script/build.sh # or do this locally and commit
       - ./script/build.sh
@@ -51,6 +57,8 @@ matrix:
     compiler: gcc
     env:
       - COMPILER=g++-6
+    before_script:
+      - ls
     script:
       - chmod +x ./script/build.sh # or do this locally and commit
       - ./script/build.sh
