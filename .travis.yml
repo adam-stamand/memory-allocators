@@ -71,6 +71,9 @@ matrix:
     compiler: gcc
     env:
       - COMPILER=g++-7
+    after_success:
+      - cd ..
+      - coveralls --include src --include include  --gcov-options '\-lp'
     addons:
       apt:
         sources: ['ubuntu-toolchain-r-test']
@@ -114,9 +117,7 @@ script:
   - ls -l
   - ./runTests
   - valgrind ./memory_allocator
-after_success:
-  - cd ..
-  - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
+
 notifications:
   email:
     on_success: never
