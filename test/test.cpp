@@ -11,8 +11,11 @@ TEST(LinearAllocatorTest, Allocate) {
     ASSERT_NE(ptr,nullptr);
     ptr = linTest.Allocate(sizeof(float)*0x1000, alignof(float));
     ASSERT_EQ(ptr,nullptr);
+    linTest.GetSize();
 }
  
+
+
 TEST(LinearAllocatorTest, Deallocate) {
     ASSERT_EQ(2,2);
 }
