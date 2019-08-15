@@ -112,7 +112,7 @@ before_script:
       --warn-uninitialized \
       -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
       -DCMAKE_CXX_STANDARD=$CPP
-  # - cmake --build .
+  - cmake --build .
   - echo $COVERITY_SCAN_TOKEN
 script:
   - cd bin
