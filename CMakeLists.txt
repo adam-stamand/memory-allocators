@@ -60,7 +60,7 @@ set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "enable X functionality" FORCE)
 # Prevent overriding the parent project's compiler/linker
 # settings on Windows
 set( gtest_force_shared_crt ON CACHE BOOL "Always use msvcrt.dll" FORCE)
-add_subdirectory(utils/benchmark)
+# add_subdirectory(utils/benchmark)
 add_subdirectory(utils/gtest)
 
 
@@ -72,7 +72,7 @@ add_executable(memoryBenchmark ${BENCH_SOURCES})
 add_executable(runTests ${TEST_SOURCES})
 
 target_link_libraries(runTests gtest gtest_main)
-target_link_libraries(memoryBenchmark benchmark)
+# target_link_libraries(memoryBenchmark benchmark)
 
 
 
