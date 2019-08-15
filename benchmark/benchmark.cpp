@@ -8,7 +8,7 @@
 using namespace alloc;
 using namespace std;
 
-auto IntToStringConversionTest(int count)
+vector<string> IntToStringConversionTest(int count)
 {
     vector<int> inputNumbers(count);
     vector<string> outNumbers;
