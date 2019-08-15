@@ -74,7 +74,7 @@ matrix:
     after_success:
       - cd ..
       - ls
-      - coveralls --exclude benchmark --exclude docs --exclude scripts --exclude utils --exclude lib --exclude tests --exclude CMakeFiles --exclude mmc_updater --exclude include/config.h  --exclude-pattern ".*automoc\.cpp" --exclude-pattern ".*\.moc" --exclude-pattern "/opt/.*" --exclude-pattern "/usr/.*" --exclude-pattern ".*moc_.*" --exclude-pattern ".*ui_.*" --exclude-pattern ".*qrc_.*" --gcov-options '\-lp'
+      - coveralls --exclude benchmark --exclude docs --exclude scripts --exclude utils --exclude lib --exclude tests --exclude-pattern "/opt/.*" --exclude-pattern "/usr/.*"  --gcov-options '\-lp'
       # - coveralls --gcov-options '\-lp'
     addons:
       apt:
