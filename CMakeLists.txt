@@ -47,9 +47,9 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
  
 
 
-file(GLOB SOURCES "src/*.cpp")
-file(GLOB BENCH_SOURCES "benchmark/*.cpp" "src/BaseAllocator.cpp" "src/LinearAllocator.cpp")
-file(GLOB TEST_SOURCES "src/LinearAllocator.cpp" "test/test.cpp" "src/BaseAllocator.cpp")
+file(GLOB SOURCES "src/*.cpp" "example/main.cpp")
+file(GLOB BENCH_SOURCES "benchmark/*.cpp" "src/*.cpp")
+file(GLOB TEST_SOURCES "test/test.cpp" "src/*.cpp")
 message("  Sources: '${SOURCES}'")
 message("  Test Sources: '${TEST_SOURCES}'")
 message("  Bench Sources: '${BENCH_SOURCES}'")
