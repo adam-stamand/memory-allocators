@@ -11,7 +11,9 @@ endif()
 
 
 set(PROJECT_NAME memory_allocators)
-set(gtest_force_shared_crt TRUE)
+
+
+
 project(${PROJECT_NAME})
 # After project(..) is called, the following variables are available:
 # * PROJECT_SOURCE_DIR - Top level source directory for the project
@@ -27,27 +29,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0") # debug, no optimisation
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage") # enabling coverage
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
-if (NOT WIN32)
-# set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
-  set(CMAKE_CXX_FLAGS "-g -Wall")
-  # list(APPEND CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
-  
-  # add_subdirectory(utils/gtest)
-  # include_directories(utils/gtest/googletest/include)
 
-  # find_package (gtest REQUIRED)
-  # find_package (Threads)
-  # include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
-  
-  
-  # message("Building for non Win32")
-  # include(gtest.cmake)
-  # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g")
+if (NOT WIN32)
+  set(CMAKE_CXX_FLAGS "-g -Wall")
 else(NOT WIN32)
-  message("Building for Win32")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
-  # include_directories(C:/Users/adams/gtest/googletest/include)
-  
 endif (NOT WIN32)
 
 
@@ -56,40 +42,37 @@ include_directories(include)
 include_directories(utils/spdlog/include)
 include_directories(utils)
 include_directories(utils/gtest/googletest/include)
+include_directories(utils/benchmark/include)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
  
 
 
 file(GLOB SOURCES "src/*.cpp")
+file(GLOB BENCH_SOURCES "benchmark/*.cpp" "src/BaseAllocator.cpp" "src/LinearAllocator.cpp")
 file(GLOB TEST_SOURCES "src/LinearAllocator.cpp" "test/test.cpp" "src/BaseAllocator.cpp")
 message("  Sources: '${SOURCES}'")
 message("  Test Sources: '${TEST_SOURCES}'")
+message("  Bench Sources: '${BENCH_SOURCES}'")
 
 
+set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "enable X functionality" FORCE)
+set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "enable X functionality" FORCE)
+# Prevent overriding the parent project's compiler/linker
+# settings on Windows
+set( gtest_force_shared_crt ON CACHE BOOL "Always use msvcrt.dll" FORCE)
+add_subdirectory(utils/benchmark)
 add_subdirectory(utils/gtest)
+
 
 
 enable_testing()
 
 add_executable(memory_allocator ${SOURCES})
+add_executable(memoryBenchmark ${BENCH_SOURCES})
 add_executable(runTests ${TEST_SOURCES})
 
 target_link_libraries(runTests gtest gtest_main)
-
-# Locate GTest
-# set(GTEST_ROOT "/usr/local/include" CACHE PATH "Path to googletest")
-# set (GTEST_ROOT "/usr/local/include/gtest")
-# find_package(GTest REQUIRED)
-
-
-
-
-if (NOT WIN32)
-  # target_link_libraries(runTests gtest ${CMAKE_THREAD_LIBS_INIT})
-else (NOT WIN32)
-  # target_link_libraries(runTests C:/Users/adams/gtest/googletest/build/Debug/gtestd.lib)
-endif (NOT WIN32)
-
+target_link_libraries(memoryBenchmark benchmark)
 
 
 

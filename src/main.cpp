@@ -1,9 +1,11 @@
 #include <iostream>
 #include "Debug.h"
 #include "LinearAllocator.h"
+#include <vector>
+#include <numeric>
 
 using namespace alloc;
-
+using namespace std;
 
 
 int main(void){

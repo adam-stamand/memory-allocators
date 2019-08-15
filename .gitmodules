@@ -4,3 +4,6 @@
 [submodule "utils/gtest"]
 	path = utils/gtest
 	url = https://github.com/google/googletest.git
+[submodule "utils/benchmark"]
+	path = utils/benchmark
+	url = https://github.com/google/benchmark.git
