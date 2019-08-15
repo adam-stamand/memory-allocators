@@ -74,7 +74,7 @@ matrix:
     after_success:
       - cd ..
       - ls
-      - coveralls -r ..  -i "src/" -i "test/"   --exclude "utils" --exclude "benchmark" --exclude "example" --exclude "build/CMakeFiles/memory_allocator.dir/"  --gcov-options '\-lp'
+      - coveralls -r ..  -i "src/" -i "test/"   --exclude "utils" --exclude "benchmark" --exclude "example" --exclude "build/CMakeFiles/memory_allocator.dir/"  --gcov-options '\-lp' --verbose
       # - coveralls --gcov-options '\-lp'
     addons:
       apt:
