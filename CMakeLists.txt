@@ -68,7 +68,7 @@ add_subdirectory(utils/gtest)
 enable_testing()
 
 add_executable(memory_allocator ${SOURCES})
-add_executable(memoryBenchmark ${BENCH_SOURCES})
+# add_executable(memoryBenchmark ${BENCH_SOURCES})
 add_executable(runTests ${TEST_SOURCES})
 
 target_link_libraries(runTests gtest gtest_main)
