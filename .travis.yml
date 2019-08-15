@@ -80,13 +80,13 @@ matrix:
       apt:
         sources: ['ubuntu-toolchain-r-test']
         packages: [g++-7, valgrind]
-      coverity_scan:
-        project:
-          name: "adam-stamand/memory-allocators"
-        notification_email: adam.stamand@gmail.com
-        build_command_prepend: ""
-        build_command: "cmake --build ."
-        branch_pattern: master
+      # coverity_scan:
+      #   project:
+      #     name: "adam-stamand/memory-allocators"
+      #   notification_email: adam.stamand@gmail.com
+      #   build_command_prepend: ""
+      #   build_command: "cmake --build ."
+      #   branch_pattern: master
 
 before_install:
   - sudo apt-get -qq update
