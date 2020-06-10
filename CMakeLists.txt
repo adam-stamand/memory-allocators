@@ -1,29 +1,34 @@
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.10)
 
 # Disable in-source builds to prevent source tree corruption.
 if(" ${CMAKE_SOURCE_DIR}" STREQUAL " ${CMAKE_BINARY_DIR}")
-  message(FATAL_ERROR "
-    FATAL: In-source builds are not allowed.
-    You should create a separate directory for build files.
-    (cd into build/ and run $cmake ..)
-  ")
+message(FATAL_ERROR "
+FATAL: In-source builds are not allowed.
+You should create a separate directory for build files.
+(cd into build/ and run $cmake ..)
+")
+endif()
+
+set(TOP_PROJECT_NAME memory_allocators)
+
+project(${TOP_PROJECT_NAME} LANGUAGES C CXX)
+
+# set default build type
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "" FORCE)
 endif()
 
 
-set(PROJECT_NAME memory_allocators)
-
-
-
-project(${PROJECT_NAME})
-# After project(..) is called, the following variables are available:
-# * PROJECT_SOURCE_DIR - Top level source directory for the project
-# * PROJECT_BINARY_DIR - Full path to build directory for project
+# output directories
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin") 
+# cmake config options
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 ########################################
 # Set up the compiler flags
 ########################################
-
-
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0") # debug, no optimisation
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage") # enabling coverage
@@ -36,8 +41,9 @@ else(NOT WIN32)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 endif (NOT WIN32)
 
+# Build tests. Remove 
+include(CTest)
 
-# Link runTests with what we want to test and the GTest and pthread library
 include_directories(include)
 include_directories(utils/spdlog/include)
 include_directories(utils)
@@ -45,36 +51,28 @@ include_directories(utils/gtest/googletest/include)
 include_directories(utils/benchmark/include)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
  
+set(
+  memory_allocator_sources
+      "${CMAKE_SOURCE_DIR}/src/BaseAllocator.cpp"
+      "${CMAKE_SOURCE_DIR}/src/LinearAllocator.cpp"
+      "${CMAKE_SOURCE_DIR}/example/main.cpp"
+)
+set(
+  benchmark_sources
+      "${CMAKE_SOURCE_DIR}/src/BaseAllocator.cpp"
+      "${CMAKE_SOURCE_DIR}/src/LinearAllocator.cpp"
+      "${CMAKE_SOURCE_DIR}/benchmark/benchmark.cpp"
+)
 
 
-file(GLOB SOURCES "src/*.cpp" "example/main.cpp")
-file(GLOB BENCH_SOURCES "benchmark/*.cpp" "src/*.cpp")
-file(GLOB TEST_SOURCES "test/test.cpp" "src/*.cpp")
-message("  Sources: '${SOURCES}'")
-message("  Test Sources: '${TEST_SOURCES}'")
-message("  Bench Sources: '${BENCH_SOURCES}'")
+if(CMAKE_PROJECT_NAME STREQUAL TOP_PROJECT_NAME AND BUILD_TESTING)
+  # Prevent overriding the parent project's compiler/linker
+  # settings on Windows
+  set( gtest_force_shared_crt ON CACHE BOOL "Always use msvcrt.dll" FORCE)
+  add_subdirectory(utils/gtest)
+endif()
 
-
-set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "enable X functionality" FORCE)
-set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "enable X functionality" FORCE)
-# Prevent overriding the parent project's compiler/linker
-# settings on Windows
-set( gtest_force_shared_crt ON CACHE BOOL "Always use msvcrt.dll" FORCE)
-# add_subdirectory(utils/benchmark)
-add_subdirectory(utils/gtest)
-
-
-
-enable_testing()
-
-add_executable(memory_allocator ${SOURCES})
-# add_executable(memoryBenchmark ${BENCH_SOURCES})
-add_executable(runTests ${TEST_SOURCES})
-
-target_link_libraries(runTests gtest gtest_main)
-# target_link_libraries(memoryBenchmark benchmark)
-
-
-
-
-
+# Include all of the sub projects
+add_subdirectory(allocators/BaseAllocator)
+add_subdirectory(allocators/LinearAllocator)
+add_subdirectory(example)
