@@ -6,35 +6,34 @@ using namespace alloc;
 class TestAllocator : public alloc::BaseAllocator
 {
 public:
-    TestAllocator(){};
-    void * Allocate(size_t size, uint8_t alignment)
+    TestAllocator(size_t memory_size):BaseAllocator(memory_size){};
+    
+    AllocatorStatus_t Allocate(size_t size, size_t alignment, void ** ptr)
     {
-        this->m_size = size;
-        this->m_used = 0;
-        return 0;
+        return kStatusSuccess;
     };
-    void Deallocate(void * ptr)
+
+    AllocatorStatus_t Deallocate(void ** ptr)
     {
-        this->m_size = 0;
+        return kStatusSuccess;
     };
 };
 
 TEST(BaseAllocatorTest, Allocate) { 
-    TestAllocator testAllocator;
+    TestAllocator testAllocator(0x1000);
+    void * ptr;
     
-    (void) testAllocator.Allocate(sizeof(int)*100, alignof(int));
-    
-    ASSERT_EQ(testAllocator.GetSize(),sizeof(int)*100);
+    AllocatorStatus_t status = testAllocator.Allocate(sizeof(int)*100, alignof(int), &ptr);
+    ASSERT_EQ(status, kStatusSuccess);
 }
  
 
 
 TEST(BaseAllocatorTest, Deallocate) {
-    TestAllocator testAllocator;
-
-    (void) testAllocator.Deallocate(nullptr);
+    TestAllocator testAllocator(0x1000);
     
-    ASSERT_EQ(testAllocator.GetSize(),(size_t)0);
+    AllocatorStatus_t status = testAllocator.Deallocate(nullptr);
+    ASSERT_EQ(status, kStatusSuccess);
 }
  
 int main(int argc, char **argv) {

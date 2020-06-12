@@ -29,7 +29,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 ########################################
 # Set up the compiler flags
 ########################################
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0") # debug, no optimisation
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage") # enabling coverage
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
@@ -44,25 +44,13 @@ endif (NOT WIN32)
 # Build tests. Remove 
 include(CTest)
 
-include_directories(include)
+include_directories(lib)
+include_directories(lib/libalign/inc)
 include_directories(utils/spdlog/include)
 include_directories(utils)
 include_directories(utils/gtest/googletest/include)
 include_directories(utils/benchmark/include)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
- 
-set(
-  memory_allocator_sources
-      "${CMAKE_SOURCE_DIR}/src/BaseAllocator.cpp"
-      "${CMAKE_SOURCE_DIR}/src/LinearAllocator.cpp"
-      "${CMAKE_SOURCE_DIR}/example/main.cpp"
-)
-set(
-  benchmark_sources
-      "${CMAKE_SOURCE_DIR}/src/BaseAllocator.cpp"
-      "${CMAKE_SOURCE_DIR}/src/LinearAllocator.cpp"
-      "${CMAKE_SOURCE_DIR}/benchmark/benchmark.cpp"
-)
 
 
 if(CMAKE_PROJECT_NAME STREQUAL TOP_PROJECT_NAME AND BUILD_TESTING)
@@ -74,5 +62,7 @@ endif()
 
 # Include all of the sub projects
 add_subdirectory(allocators/BaseAllocator)
+add_subdirectory(lib/libalign)
+add_subdirectory(allocators/)
 add_subdirectory(allocators/LinearAllocator)
 add_subdirectory(example)
