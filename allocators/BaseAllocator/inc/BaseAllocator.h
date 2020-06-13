@@ -14,7 +14,7 @@ public:
     virtual ~BaseAllocator();
     
     virtual AllocatorStatus_t Allocate(size_t size, size_t alignment, void ** ptr) = 0;
-    virtual AllocatorStatus_t Deallocate(void ** ptr) = 0;
+    virtual AllocatorStatus_t Deallocate(void * ptr) = 0;
 
     /**
      * @brief Get the Allocator Size

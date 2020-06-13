@@ -7,4 +7,4 @@ project(run_allocator_tests)
 add_custom_target(run_allocator_tests)
 
 # Make sure base allocator lib is built first
-add_dependencies(run_allocator_tests base_allocator_test linear_allocator_test)
+add_dependencies(run_allocator_tests base_allocator_test linear_allocator_test stack_allocator_test)

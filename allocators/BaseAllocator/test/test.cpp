@@ -3,37 +3,37 @@
 #include <gtest/gtest.h>
 using namespace alloc;
 
+
+static const size_t MEMORY_SIZE_INIT = 0x1000;
+
 class TestAllocator : public alloc::BaseAllocator
 {
 public:
-    TestAllocator(size_t memory_size):BaseAllocator(memory_size){};
-    
-    AllocatorStatus_t Allocate(size_t size, size_t alignment, void ** ptr)
-    {
-        return kStatusSuccess;
-    };
-
-    AllocatorStatus_t Deallocate(void ** ptr)
-    {
-        return kStatusSuccess;
-    };
+    TestAllocator(size_t memory_size):BaseAllocator(memory_size){}
+    AllocatorStatus_t Allocate(size_t size, size_t alignment, void ** ptr){return kStatusSuccess;}
+    AllocatorStatus_t Deallocate(void * ptr){return kStatusSuccess;}
 };
 
 TEST(BaseAllocatorTest, Allocate) { 
-    TestAllocator testAllocator(0x1000);
-    void * ptr;
+    TestAllocator testAllocator(MEMORY_SIZE_INIT);
     
-    AllocatorStatus_t status = testAllocator.Allocate(sizeof(int)*100, alignof(int), &ptr);
+    AllocatorStatus_t status = testAllocator.Allocate(0, 0, nullptr);
     ASSERT_EQ(status, kStatusSuccess);
 }
- 
 
 
 TEST(BaseAllocatorTest, Deallocate) {
-    TestAllocator testAllocator(0x1000);
+    TestAllocator testAllocator(MEMORY_SIZE_INIT);
     
     AllocatorStatus_t status = testAllocator.Deallocate(nullptr);
     ASSERT_EQ(status, kStatusSuccess);
+}
+
+TEST(BaseAllocatorTest, GetAllocatorSize) { 
+    TestAllocator testAllocator(MEMORY_SIZE_INIT);
+    
+    size_t allocator_size = testAllocator.GetAllocatorSize();
+    ASSERT_EQ(allocator_size, MEMORY_SIZE_INIT);
 }
  
 int main(int argc, char **argv) {

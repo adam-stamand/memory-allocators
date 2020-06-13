@@ -47,7 +47,7 @@ public:
    * 
    * @param ptr Returns nullptr
    */
-  AllocatorStatus_t Deallocate(void **ptr);
+  AllocatorStatus_t Deallocate(void *ptr);
 
 
   inline size_t GetUsed() { return reinterpret_cast<uintptr_t>(current_address_) - reinterpret_cast<uintptr_t>(GetAllocatorStart());}

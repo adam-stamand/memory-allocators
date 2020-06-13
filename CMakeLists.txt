@@ -61,8 +61,9 @@ if(CMAKE_PROJECT_NAME STREQUAL TOP_PROJECT_NAME AND BUILD_TESTING)
 endif()
 
 # Include all of the sub projects
-add_subdirectory(allocators/BaseAllocator)
 add_subdirectory(lib/libalign)
-add_subdirectory(allocators/)
-add_subdirectory(allocators/LinearAllocator)
 add_subdirectory(example)
+add_subdirectory(allocators/)
+add_subdirectory(allocators/BaseAllocator)
+add_subdirectory(allocators/LinearAllocator)
+add_subdirectory(allocators/StackAllocator)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseAllocator.h"
+#include <libalign.h>
 
 namespace alloc
 {
@@ -32,7 +33,7 @@ public:
    * 
    * @param ptr Returns nullptr
    */
-  AllocatorStatus_t Deallocate(void **ptr);
+  AllocatorStatus_t Deallocate(void *ptr);
 
   inline size_t GetUsed() { return reinterpret_cast<uintptr_t>(current_address_) - reinterpret_cast<uintptr_t>(GetAllocatorStart());}
   inline size_t GetRemaining() { return GetAllocatorSize() - GetUsed();}
@@ -51,19 +52,19 @@ public:
     
   void Initialize(size_t memory_size);
 
-private:
-
+  // TODO make private (needed for testing)
   struct StackHeader
   {
-    size_t alignment_offset;
+    align::alignment_t alignment_offset;
   };
+  
+private:
+
+
 
 
   void AddUsed(size_t memory_used);
-  void RemoveUsed(size_t memory_used);
   void * current_address_;
-  struct StackHeader * header_address_;
-  
 };
 
 

@@ -16,8 +16,11 @@ if(CMAKE_PROJECT_NAME STREQUAL TOP_PROJECT_NAME AND BUILD_TESTING)
     add_subdirectory(test)
 endif()
 
-# Make sure base allocator lib is built first
-add_dependencies(stack_allocator_test base_allocator_lib)
-
 # Create a static library for other allocators to use
 add_library(stack_allocator_lib STATIC ${STACK_ALLOCATOR_SOURCES})
+
+# Make sure base allocator lib is built first
+add_dependencies(stack_allocator_lib base_allocator_lib)
+
+# Link the necessary libs (including base allocator and linear allocator)
+target_link_libraries(stack_allocator_lib  base_allocator_lib )

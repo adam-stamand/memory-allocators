@@ -32,7 +32,7 @@ void BaseAllocator::Initialize(size_t memory_size)
 
 void BaseAllocator::Finalize()
 {
-    SPDLOG_DEBUG("Finalizing memory: size={}", 
+    SPDLOG_DEBUG("Finalizing memory: size={}B", 
                  memory_size_);
     
     free(start_address_);

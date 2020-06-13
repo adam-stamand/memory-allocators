@@ -24,6 +24,20 @@ inline alignment_t alignForwardAdjustment(const void* address, alignment_t align
 
 }
 
+/** 
+ * @brief Get alignment adjustment with header
+ * 
+ * This call will return the number of bytes necessary to adjust
+ * provided address to an aligned address, accounting for a header.
+ * 
+ * For example, if a header is 0x5 bytes in size, the alignment is 0x4 bytes,
+ * and the address is 0x21, the returned adjustment will be 0x2 bytes.
+ * 
+ * @param address 
+ * @param alignment 
+ * @param headerSize 
+ * @return alignment_t 
+ */
 inline alignment_t alignForwardAdjustmentWithHeader(const void* address, alignment_t alignment, alignment_t headerSize)
 {
     if (alignment == 0)
