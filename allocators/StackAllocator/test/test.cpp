@@ -383,11 +383,11 @@ TEST(StackAllocatorTest, ClearInit)
     /* Clear the entire allocator and verify it's been cleared */
     stackAllocator.Clear();
     memory_size = stackAllocator.GetUsed();
-    EXPECT_EQ(memory_size, 0);
+    EXPECT_EQ(memory_size, 0u);
     memory_size = stackAllocator.GetAllocatorSize();
-    EXPECT_EQ(memory_size, 0);
+    EXPECT_EQ(memory_size, 0u);
     memory_size = stackAllocator.GetRemaining();
-    EXPECT_EQ(memory_size, 0);
+    EXPECT_EQ(memory_size, 0u);
     is_enough = stackAllocator.IsEnoughMemory(10);
     EXPECT_EQ(is_enough, false);
     is_enough = stackAllocator.IsEnoughMemory(0);
@@ -396,7 +396,7 @@ TEST(StackAllocatorTest, ClearInit)
     /* Initialize the stack and ensure it's been initialized */
     stackAllocator.Initialize(MEMORY_SIZE_INIT);
     memory_size = stackAllocator.GetUsed();
-    EXPECT_EQ(memory_size, 0);
+    EXPECT_EQ(memory_size, 0u);
     memory_size = stackAllocator.GetAllocatorSize();
     EXPECT_EQ(memory_size, MEMORY_SIZE_INIT);
     memory_size = stackAllocator.GetRemaining();

@@ -41,31 +41,31 @@ TEST(AlignmentTest, AlignAddress) {
     size_t adjustment;
     
     adjustment = alignForwardAdjustment((void*)0x102, 0x4);
-    EXPECT_EQ(adjustment, 2);
+    EXPECT_EQ(adjustment, 2u);
 
     adjustment = alignForwardAdjustment((void*)0x105, 0x2);
-    EXPECT_EQ(adjustment, 1);
+    EXPECT_EQ(adjustment, 1u);
 
     adjustment = alignForwardAdjustment((void*)0x111, 0x8);
-    EXPECT_EQ(adjustment, 7);
+    EXPECT_EQ(adjustment, 7u);
 
     adjustment = alignForwardAdjustment((void*)0x123, 0x10);
-    EXPECT_EQ(adjustment, 13);
+    EXPECT_EQ(adjustment, 13u);
 
     adjustment = alignForwardAdjustment((void*)0x245, 0x1);
-    EXPECT_EQ(adjustment, 0);
+    EXPECT_EQ(adjustment, 0u);
 
     adjustment = alignForwardAdjustment((void*)0x578, 0x8);
-    EXPECT_EQ(adjustment, 0);
+    EXPECT_EQ(adjustment, 0u);
 
     adjustment = alignForwardAdjustment((void*)0x632, 0x2);
-    EXPECT_EQ(adjustment, 0);
+    EXPECT_EQ(adjustment, 0u);
 
     adjustment = alignForwardAdjustment((void*)0x113, 0x1);
-    EXPECT_EQ(adjustment, 0);
+    EXPECT_EQ(adjustment, 0u);
 
     adjustment = alignForwardAdjustment((void*)0x352, 0x0);
-    EXPECT_EQ(adjustment, 0);
+    EXPECT_EQ(adjustment, 0u);
 }
  
 
@@ -73,34 +73,34 @@ TEST(AlignmentTest, AlignAddressAdjustmentWithHeader) {
     size_t adjustment;
 
     adjustment = alignForwardAdjustmentWithHeader((void*)0x102, 0x4, 0x5);
-    EXPECT_EQ(adjustment, 6);
+    EXPECT_EQ(adjustment, 6u);
 
     adjustment = alignForwardAdjustmentWithHeader((void*)0x105, 0x2, 0x10);
-    EXPECT_EQ(adjustment, 17);
+    EXPECT_EQ(adjustment, 17u);
 
     adjustment = alignForwardAdjustmentWithHeader((void*)0x111, 0x8, 0x5);
-    EXPECT_EQ(adjustment, 7);
+    EXPECT_EQ(adjustment, 7u);
 
     adjustment = alignForwardAdjustmentWithHeader((void*)0x123, 0x10, 0x20);
-    EXPECT_EQ(adjustment, 45);
+    EXPECT_EQ(adjustment, 45u);
 
     adjustment = alignForwardAdjustmentWithHeader((void*)0x245, 0x1, 0x5);
-    EXPECT_EQ(adjustment, 5);
+    EXPECT_EQ(adjustment, 5u);
 
     adjustment = alignForwardAdjustmentWithHeader((void*)0x578, 0x8, 0x9);
-    EXPECT_EQ(adjustment, 16);
+    EXPECT_EQ(adjustment, 16u);
 
     adjustment = alignForwardAdjustmentWithHeader((void*)0x632, 0x2, 0x05);
-    EXPECT_EQ(adjustment, 6);
+    EXPECT_EQ(adjustment, 6u);
 
     adjustment = alignForwardAdjustmentWithHeader((void*)0x113, 0x1, 0x03);
-    EXPECT_EQ(adjustment, 3);
+    EXPECT_EQ(adjustment, 3u);
 
     adjustment = alignForwardAdjustmentWithHeader((void*)0x352, 0x0, 0x2);
-    EXPECT_EQ(adjustment, 0);
+    EXPECT_EQ(adjustment, 0u);
 
     adjustment = alignForwardAdjustmentWithHeader((void*)0x351, 0x4, 0x0);
-    EXPECT_EQ(adjustment, 3);
+    EXPECT_EQ(adjustment, 3u);
 }
 
  

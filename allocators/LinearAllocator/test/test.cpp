@@ -349,11 +349,11 @@ TEST(LinearAllocatorTest, ClearInit)
     /* Clear the entire allocator and verify it's been cleared */
     linearAllocator.Clear();
     memory_size = linearAllocator.GetUsed();
-    EXPECT_EQ(memory_size, 0);
+    EXPECT_EQ(memory_size, 0u);
     memory_size = linearAllocator.GetAllocatorSize();
-    EXPECT_EQ(memory_size, 0);
+    EXPECT_EQ(memory_size, 0u);
     memory_size = linearAllocator.GetRemaining();
-    EXPECT_EQ(memory_size, 0);
+    EXPECT_EQ(memory_size, 0u);
     is_enough = linearAllocator.IsEnoughMemory(10);
     EXPECT_EQ(is_enough, false);
     is_enough = linearAllocator.IsEnoughMemory(0);
@@ -362,7 +362,7 @@ TEST(LinearAllocatorTest, ClearInit)
     /* Initialize the linear and ensure it's been initialized */
     linearAllocator.Initialize(MEMORY_SIZE_INIT);
     memory_size = linearAllocator.GetUsed();
-    EXPECT_EQ(memory_size, 0);
+    EXPECT_EQ(memory_size, 0u);
     memory_size = linearAllocator.GetAllocatorSize();
     EXPECT_EQ(memory_size, MEMORY_SIZE_INIT);
     memory_size = linearAllocator.GetRemaining();

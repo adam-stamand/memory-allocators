@@ -36,9 +36,9 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
 
 if (NOT WIN32)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Werror")
 else(NOT WIN32)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 -Werror")
 endif (NOT WIN32)
 
 # Build tests. Remove 
@@ -60,6 +60,15 @@ if(CMAKE_PROJECT_NAME STREQUAL TOP_PROJECT_NAME AND BUILD_TESTING)
   add_subdirectory(utils/gtest)
 endif()
 
+# Include helper scripts
+set(cmake_dirs "templates")
+foreach(dir ${cmake_dirs})
+    file(GLOB scripts "cmake/${dir}/*.cmake")
+    foreach(script ${scripts})
+        include(${script})
+    endforeach()
+endforeach()
+
 # Include all of the sub projects
 add_subdirectory(lib/libalign)
 add_subdirectory(example)
@@ -67,3 +76,4 @@ add_subdirectory(allocators/)
 add_subdirectory(allocators/BaseAllocator)
 add_subdirectory(allocators/LinearAllocator)
 add_subdirectory(allocators/StackAllocator)
+
