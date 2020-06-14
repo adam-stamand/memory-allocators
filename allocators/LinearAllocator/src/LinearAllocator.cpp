@@ -20,7 +20,7 @@ LinearAllocator::~LinearAllocator()
 AllocatorStatus_t LinearAllocator::Allocate(size_t size, size_t alignment, void **ptr)
 {   
     SPDLOG_DEBUG("Allocating: curr_used={}B allocating={}B alignment={}B",
-            GetUsed(), size, alignment);
+            InUseMemory(), size, alignment);
 
     if (ptr == nullptr)
     {
@@ -37,7 +37,7 @@ AllocatorStatus_t LinearAllocator::Allocate(size_t size, size_t alignment, void 
     /* Next allocation will align according to specified alignment */
     align::alignment_t alignment_adjustment = align::alignForwardAdjustment(current_address_, alignment);
 
-    if (!IsEnoughMemory(size + alignment_adjustment))
+    if (!EnoughMemory(size + alignment_adjustment))
     {
         SPDLOG_WARN("Failed to allocate: Not enough memory left");
         *ptr = nullptr;
@@ -45,14 +45,14 @@ AllocatorStatus_t LinearAllocator::Allocate(size_t size, size_t alignment, void 
     }
 
     /* Adjust for alignment (with header) first and set the callers pointer*/
-    AddUsed(alignment_adjustment);
+    AdjustMemory(alignment_adjustment);
     *ptr = current_address_;
 
     /* Now allocate the requested memory size */
-    AddUsed(size);
+    AdjustMemory(size);
 
     SPDLOG_DEBUG("Allocation complete: allocated_address={} curr_address={} curr_used={}B",
-                *ptr, current_address_ , GetUsed());
+                *ptr, current_address_ , InUseMemory());
 
     return kStatusSuccess;
 }
@@ -62,30 +62,22 @@ AllocatorStatus_t LinearAllocator::Deallocate(void * ptr)
     return kStatusFailure; 
 }
 
-
-
-void LinearAllocator::AddUsed(size_t memory_used)
-{
-    
-    ASSERT(GetUsed() + memory_used <= GetAllocatorSize(), "Failed to add used: not enough memory left.");
-
-    current_address_ = reinterpret_cast<void*>( reinterpret_cast<uintptr_t>(current_address_) + memory_used );
-}
-
-void LinearAllocator::Clear()
+AllocatorStatus_t LinearAllocator::ClearMemory()
 {
     Finalize();
     current_address_ = nullptr;
     SPDLOG_DEBUG("Memory cleared: curr_address={}", 
                  current_address_);
+    return kStatusSuccess;
 }
 
-void LinearAllocator::Initialize(size_t memory_size)
+AllocatorStatus_t LinearAllocator::InitMemory(size_t memory_size)
 {
     BaseAllocator::Initialize(memory_size);
     current_address_ = GetAllocatorStart();
     SPDLOG_DEBUG("Memory Initialized: curr_address={}", 
                  current_address_);
+    return kStatusSuccess;
 }
 
 

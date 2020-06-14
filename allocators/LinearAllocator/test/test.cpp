@@ -58,8 +58,8 @@ static void AllocateMemory(
     align::alignment_t adjusted_alignment;
 
     /* Ensure used size and remaining size are correct */
-    previous_used = linearAllocator.GetUsed();
-    ASSERT_EQ(linearAllocator.GetRemaining(), MEMORY_SIZE_INIT - previous_used);
+    previous_used = linearAllocator.InUseMemory();
+    ASSERT_EQ(linearAllocator.RemainingMemory(), MEMORY_SIZE_INIT - previous_used);
     
     /* Perform next allocation */
     status = linearAllocator.Allocate(
@@ -88,7 +88,7 @@ static void AllocateMemory(
             reinterpret_cast<uintptr_t>(curr_block.allocation));
         
         /* Ensure used memory account for newly allocated memory plus adjusted alignment */
-        ASSERT_EQ(linearAllocator.GetUsed(), previous_used + curr_block.allocation_size + adjusted_alignment);
+        ASSERT_EQ(linearAllocator.InUseMemory(), previous_used + curr_block.allocation_size + adjusted_alignment);
     }
     
 }
@@ -226,7 +226,7 @@ TEST(LinearAllocatorTest, AllocateTooMuch)
     void * curr_allocation;
 
     /* Ensure remaining size is init size */
-    ASSERT_EQ(linearAllocator.GetRemaining(), MEMORY_SIZE_INIT);
+    ASSERT_EQ(linearAllocator.RemainingMemory(), MEMORY_SIZE_INIT);
     
     /* Allocate more memory than available */
     status = linearAllocator.Allocate(
@@ -236,7 +236,7 @@ TEST(LinearAllocatorTest, AllocateTooMuch)
     EXPECT_EQ(status, kStatusOutOfMemory);
 
     /* Ensure remaining size is still init size */
-    EXPECT_EQ(linearAllocator.GetRemaining(), MEMORY_SIZE_INIT);    
+    EXPECT_EQ(linearAllocator.RemainingMemory(), MEMORY_SIZE_INIT);    
 }
 
 TEST(LinearAllocatorTest, AllocateInvalidInput) 
@@ -246,7 +246,7 @@ TEST(LinearAllocatorTest, AllocateInvalidInput)
     void * curr_allocation;
 
     /* Ensure remaining size is init size */
-    ASSERT_EQ(linearAllocator.GetRemaining(), MEMORY_SIZE_INIT);
+    ASSERT_EQ(linearAllocator.RemainingMemory(), MEMORY_SIZE_INIT);
     
     /* Perform next allocation with bad pointer */
     status = linearAllocator.Allocate(
@@ -270,7 +270,7 @@ TEST(LinearAllocatorTest, AllocateInvalidInput)
     EXPECT_EQ(status, kStatusInvalidParam);
 
     /* Ensure remaining size is still init size */
-    EXPECT_EQ(linearAllocator.GetRemaining(), MEMORY_SIZE_INIT);    
+    EXPECT_EQ(linearAllocator.RemainingMemory(), MEMORY_SIZE_INIT);    
 }
 
 
@@ -347,27 +347,27 @@ TEST(LinearAllocatorTest, ClearInit)
 
 
     /* Clear the entire allocator and verify it's been cleared */
-    linearAllocator.Clear();
-    memory_size = linearAllocator.GetUsed();
+    linearAllocator.ClearMemory();
+    memory_size = linearAllocator.InUseMemory();
     EXPECT_EQ(memory_size, 0u);
-    memory_size = linearAllocator.GetAllocatorSize();
+    memory_size = linearAllocator.TotalMemory();
     EXPECT_EQ(memory_size, 0u);
-    memory_size = linearAllocator.GetRemaining();
+    memory_size = linearAllocator.RemainingMemory();
     EXPECT_EQ(memory_size, 0u);
-    is_enough = linearAllocator.IsEnoughMemory(10);
+    is_enough = linearAllocator.EnoughMemory(10);
     EXPECT_EQ(is_enough, false);
-    is_enough = linearAllocator.IsEnoughMemory(0);
+    is_enough = linearAllocator.EnoughMemory(0);
     EXPECT_EQ(is_enough, true); 
 
     /* Initialize the linear and ensure it's been initialized */
-    linearAllocator.Initialize(MEMORY_SIZE_INIT);
-    memory_size = linearAllocator.GetUsed();
+    linearAllocator.InitMemory(MEMORY_SIZE_INIT);
+    memory_size = linearAllocator.InUseMemory();
     EXPECT_EQ(memory_size, 0u);
-    memory_size = linearAllocator.GetAllocatorSize();
+    memory_size = linearAllocator.TotalMemory();
     EXPECT_EQ(memory_size, MEMORY_SIZE_INIT);
-    memory_size = linearAllocator.GetRemaining();
+    memory_size = linearAllocator.RemainingMemory();
     EXPECT_EQ(memory_size, MEMORY_SIZE_INIT);
-    is_enough = linearAllocator.IsEnoughMemory(10);
+    is_enough = linearAllocator.EnoughMemory(10);
     EXPECT_EQ(is_enough, true);
 
     /* Memory cleared, clear all old references */

@@ -61,8 +61,8 @@ static void AllocateMemory(
     align::alignment_t adjusted_alignment;
 
     /* Ensure used size and remaining size are correct */
-    previous_used = stackAllocator.InUseMemory();
-    ASSERT_EQ(stackAllocator.RemainingMemory(), MEMORY_SIZE_INIT - previous_used);
+    previous_used = stackAllocator.GetUsed();
+    ASSERT_EQ(stackAllocator.GetRemaining(), MEMORY_SIZE_INIT - previous_used);
     
     /* Perform next allocation */
     status = stackAllocator.Allocate(
@@ -97,7 +97,7 @@ static void AllocateMemory(
     }
     
     /* Ensure used memory account for newly allocated memory plus adjusted alignment */
-    ASSERT_EQ(stackAllocator.InUseMemory(), previous_used + curr_block.allocation_size + adjusted_alignment);
+    ASSERT_EQ(stackAllocator.GetUsed(), previous_used + curr_block.allocation_size + adjusted_alignment);
 }
 
 static void DeallocateMemory(
@@ -110,8 +110,8 @@ static void DeallocateMemory(
     align::alignment_t adjusted_alignment;
     
     /* Ensure used size and remaining size are correct */
-    previous_used = stackAllocator.InUseMemory();
-    ASSERT_EQ(stackAllocator.RemainingMemory(), MEMORY_SIZE_INIT - previous_used);
+    previous_used = stackAllocator.GetUsed();
+    ASSERT_EQ(stackAllocator.GetRemaining(), MEMORY_SIZE_INIT - previous_used);
 
     /* Deallocate the current block and ensure successful */
     status = stackAllocator.Deallocate(curr_block.allocation);
@@ -135,7 +135,7 @@ static void DeallocateMemory(
             curr_block.header_size);
     }
 
-    ASSERT_EQ(stackAllocator.InUseMemory(), previous_used - curr_block.allocation_size - adjusted_alignment);
+    ASSERT_EQ(stackAllocator.GetUsed(), previous_used - curr_block.allocation_size - adjusted_alignment);
 }
 
 static void PushAllocateTestBlock(
@@ -260,7 +260,7 @@ TEST(StackAllocatorTest, AllocateTooMuch)
     void * curr_allocation;
 
     /* Ensure remaining size is init size */
-    ASSERT_EQ(stackAllocator.RemainingMemory(), MEMORY_SIZE_INIT);
+    ASSERT_EQ(stackAllocator.GetRemaining(), MEMORY_SIZE_INIT);
     
     /* Allocate more memory than available */
     status = stackAllocator.Allocate(
@@ -270,7 +270,7 @@ TEST(StackAllocatorTest, AllocateTooMuch)
     EXPECT_EQ(status, kStatusOutOfMemory);
 
     /* Ensure remaining size is still init size */
-    EXPECT_EQ(stackAllocator.RemainingMemory(), MEMORY_SIZE_INIT);    
+    EXPECT_EQ(stackAllocator.GetRemaining(), MEMORY_SIZE_INIT);    
 }
 
 TEST(StackAllocatorTest, AllocateInvalidInput) 
@@ -280,7 +280,7 @@ TEST(StackAllocatorTest, AllocateInvalidInput)
     void * curr_allocation;
 
     /* Ensure remaining size is init size */
-    ASSERT_EQ(stackAllocator.RemainingMemory(), MEMORY_SIZE_INIT);
+    ASSERT_EQ(stackAllocator.GetRemaining(), MEMORY_SIZE_INIT);
     
     /* Perform next allocation with bad pointer */
     status = stackAllocator.Allocate(
@@ -304,7 +304,7 @@ TEST(StackAllocatorTest, AllocateInvalidInput)
     EXPECT_EQ(status, kStatusInvalidParam);
 
     /* Ensure remaining size is still init size */
-    EXPECT_EQ(stackAllocator.RemainingMemory(), MEMORY_SIZE_INIT);    
+    EXPECT_EQ(stackAllocator.GetRemaining(), MEMORY_SIZE_INIT);    
 }
 
 
@@ -381,27 +381,27 @@ TEST(StackAllocatorTest, ClearInit)
 
 
     /* Clear the entire allocator and verify it's been cleared */
-    stackAllocator.ClearMemory();
-    memory_size = stackAllocator.InUseMemory();
+    stackAllocator.Clear();
+    memory_size = stackAllocator.GetUsed();
     EXPECT_EQ(memory_size, 0u);
-    memory_size = stackAllocator.TotalMemory();
+    memory_size = stackAllocator.GetAllocatorSize();
     EXPECT_EQ(memory_size, 0u);
-    memory_size = stackAllocator.RemainingMemory();
+    memory_size = stackAllocator.GetRemaining();
     EXPECT_EQ(memory_size, 0u);
-    is_enough = stackAllocator.EnoughMemory(10);
+    is_enough = stackAllocator.IsEnoughMemory(10);
     EXPECT_EQ(is_enough, false);
-    is_enough = stackAllocator.EnoughMemory(0);
+    is_enough = stackAllocator.IsEnoughMemory(0);
     EXPECT_EQ(is_enough, true); 
 
     /* Initialize the stack and ensure it's been initialized */
-    stackAllocator.InitMemory(MEMORY_SIZE_INIT);
-    memory_size = stackAllocator.InUseMemory();
+    stackAllocator.Initialize(MEMORY_SIZE_INIT);
+    memory_size = stackAllocator.GetUsed();
     EXPECT_EQ(memory_size, 0u);
-    memory_size = stackAllocator.TotalMemory();
+    memory_size = stackAllocator.GetAllocatorSize();
     EXPECT_EQ(memory_size, MEMORY_SIZE_INIT);
-    memory_size = stackAllocator.RemainingMemory();
+    memory_size = stackAllocator.GetRemaining();
     EXPECT_EQ(memory_size, MEMORY_SIZE_INIT);
-    is_enough = stackAllocator.EnoughMemory(10);
+    is_enough = stackAllocator.IsEnoughMemory(10);
     EXPECT_EQ(is_enough, true);
 
     /* Memory cleared, clear all old references */

@@ -1,10 +1,16 @@
 #pragma once
 
 #include <iostream>
+#define ADD_TO_POINTER(ptr, add) (reinterpret_cast<void*>( reinterpret_cast<uintptr_t>(ptr) + add ))
+#define SUB_POINTER_POINTER_UINT(ptr1, ptr2) (reinterpret_cast<uintptr_t>( reinterpret_cast<uintptr_t>(ptr1) - reinterpret_cast<uintptr_t>(ptr2) ))
+
 
 namespace align{
 
+
 typedef size_t alignment_t;
+
+
 
 inline void* alignForward(void* address, alignment_t alignment)
 {

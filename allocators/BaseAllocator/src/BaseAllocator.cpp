@@ -28,6 +28,8 @@ void BaseAllocator::Initialize(size_t memory_size)
     ASSERT(start_address_ != nullptr, "Failed to malloc memory");
         
     memory_size_ = memory_size;
+    bytes_remaining_ = memory_size;
+    bytes_in_use_ = 0;
 }
 
 void BaseAllocator::Finalize()
@@ -39,4 +41,21 @@ void BaseAllocator::Finalize()
 
     start_address_ = nullptr;
     memory_size_ = 0;
+    bytes_in_use_ = 0;
+    bytes_remaining_ = 0;
+}
+
+void BaseAllocator::AdjustMemoryInUse(signed long memory_size)
+{
+    if (memory_size > 0)
+    {
+        ASSERT(bytes_in_use_ + memory_size >= bytes_in_use_,  "Failed to adjust");
+    }
+    else
+    {
+        ASSERT(bytes_in_use_ + memory_size >= 0,  "Failed to adjust");   
+    }
+
+    bytes_in_use_ += memory_size;
+    bytes_remaining_ = memory_size_ - bytes_in_use_; 
 }

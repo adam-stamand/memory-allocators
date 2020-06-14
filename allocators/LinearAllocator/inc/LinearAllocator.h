@@ -1,5 +1,6 @@
 #pragma once
 
+#include <libalign.h>
 #include "BaseAllocator.h"
 
 namespace alloc
@@ -50,9 +51,7 @@ public:
   AllocatorStatus_t Deallocate(void *ptr);
 
 
-  inline size_t GetUsed() { return reinterpret_cast<uintptr_t>(current_address_) - reinterpret_cast<uintptr_t>(GetAllocatorStart());}
-  inline size_t GetRemaining() { return GetAllocatorSize() - GetUsed();}
-  inline bool   IsEnoughMemory(size_t memory_size) {return (GetRemaining() >= memory_size);}
+  bool EnoughMemory(size_t memory_size){return RemainingMemory() >= memory_size;}
 
   /**
    * @brief Clear Memory
@@ -62,13 +61,14 @@ public:
    * to initial state (0).
    * 
    */
-  void Clear();
+  AllocatorStatus_t ClearMemory();
 
     
-  void Initialize(size_t memory_size);
+  AllocatorStatus_t InitMemory(size_t memory_size);
 
 private:
-    void AddUsed(size_t memory_used);
+    inline void AdjustMemory(size_t memory_used){ AdjustMemoryInUse(memory_used); AdjustCurrentAddress(memory_used); };
+    inline void AdjustCurrentAddress(size_t adjustment){ current_address_ = ADD_TO_POINTER(current_address_, adjustment); }
     void * current_address_;
 };
 
