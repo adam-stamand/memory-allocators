@@ -12,12 +12,14 @@ BaseAllocator(size), current_address_(0)
     current_address_ = GetAllocatorStart();
 };
 
+
 StackAllocator::~StackAllocator()
 {
     SPDLOG_DEBUG("Destructor called");
 };
 
-AllocatorStatus_t StackAllocator::Allocate(size_t size, size_t alignment, void **ptr)
+
+Status_t StackAllocator::Allocate(size_t size, size_t alignment, void **ptr)
 {   
     SPDLOG_DEBUG("Allocating: curr_used={}B allocating={}B alignment={}B",
             InUseMemory(), size, alignment);
@@ -36,7 +38,6 @@ AllocatorStatus_t StackAllocator::Allocate(size_t size, size_t alignment, void *
 
     /* Next allocation will align according to specified alignment */
     align::alignment_t alignment_adjustment = align::alignForwardAdjustmentWithHeader(current_address_, alignment, sizeof(StackHeader));
-
     if (!EnoughMemory(size + alignment_adjustment))
     {
         SPDLOG_WARN("Failed to allocate: Not enough memory left");
@@ -45,15 +46,14 @@ AllocatorStatus_t StackAllocator::Allocate(size_t size, size_t alignment, void *
     }
 
     /* Adjust for alignment (with header) first and set the callers pointer*/
-    AdjustMemory(alignment_adjustment);
-    *ptr = current_address_;
+    *ptr = AdjustMemory(alignment_adjustment);
+     
+    /* Write the stack header contiguously previous to allocated memory */
+    StackHeader* header = reinterpret_cast<StackHeader*>(reinterpret_cast<uintptr_t>(*ptr) - sizeof(StackHeader));
+    header->alignment_offset = alignment_adjustment;
 
-    /* Write the stack header continuously previous to allocated memory */
-    StackHeader* header_address = reinterpret_cast<StackHeader*>(reinterpret_cast<uintptr_t>(current_address_) - sizeof(StackHeader));
-    header_address->alignment_offset = alignment_adjustment;
-
-    /* Now allocate the requested memory size */
-    AdjustMemory(size);
+    /* Now adjust for the requested memory size */
+    (void) AdjustMemory(size);
 
     SPDLOG_DEBUG("Allocation complete: allocated_address={} curr_address={} curr_used={}B",
                 *ptr, current_address_ , InUseMemory());
@@ -61,7 +61,8 @@ AllocatorStatus_t StackAllocator::Allocate(size_t size, size_t alignment, void *
     return kStatusSuccess;
 }
 
-AllocatorStatus_t StackAllocator::Deallocate(void * ptr) 
+
+Status_t StackAllocator::Deallocate(void * ptr) 
 { 
     SPDLOG_DEBUG("Deallocating: curr_used={}B deallocating={}B",
         InUseMemory(), reinterpret_cast<uintptr_t>(current_address_) - reinterpret_cast<uintptr_t>(ptr));
@@ -75,9 +76,9 @@ AllocatorStatus_t StackAllocator::Deallocate(void * ptr)
     /* Locate the stack header. It's kept contiguously ahead of block being deallocated */
     StackHeader * stack_header = reinterpret_cast<StackHeader*>(reinterpret_cast<uintptr_t>(ptr) - sizeof(StackHeader));
     
-    /* Use the alignment offset to locate the end of previously allocated memory */
+    /* Use the alignment offset to adjust to the end of previously allocated memory */
     signed long address_adjustment = SUB_POINTER_POINTER_UINT(current_address_, ptr) + stack_header->alignment_offset;
-    AdjustMemory(-1 * address_adjustment);
+    (void) AdjustMemory(-1 * address_adjustment);
 
     SPDLOG_DEBUG("Deallocation complete: deallocated_address={} curr_address={} curr_used={}B",
                 ptr, current_address_ , InUseMemory());
@@ -86,7 +87,7 @@ AllocatorStatus_t StackAllocator::Deallocate(void * ptr)
 }
 
 
-AllocatorStatus_t StackAllocator::ClearMemory()
+Status_t StackAllocator::ClearMemory()
 {
     Finalize();
     current_address_ = nullptr;
@@ -95,7 +96,8 @@ AllocatorStatus_t StackAllocator::ClearMemory()
     return kStatusSuccess;
 }
 
-AllocatorStatus_t StackAllocator::InitMemory(size_t memory_size)
+
+Status_t StackAllocator::InitMemory(size_t memory_size)
 {
     BaseAllocator::Initialize(memory_size);
     current_address_ = GetAllocatorStart();

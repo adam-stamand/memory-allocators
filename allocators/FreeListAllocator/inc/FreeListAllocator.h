@@ -1,20 +1,24 @@
 #pragma once
 
-#include "BaseAllocator.h"
 #include <libalign.h>
+#include <libllist.h>
+#include "BaseAllocator.h"
 
 namespace alloc
 {
 
+typedef size_t BlockSize_t;
 
-
-class StackAllocator : public BaseAllocator
+/**
+ * @brief Free List Allocator Class
+ *
+ * 
+ */
+class FreeListAllocator : public BaseAllocator
 {
-
-
 public:
-  StackAllocator(size_t memory_size);
-  virtual ~StackAllocator();
+  FreeListAllocator(size_t memory_size);
+  virtual ~FreeListAllocator();
 
   /**
    * @brief Allocate Memory
@@ -23,7 +27,7 @@ public:
    * @param alignment Define byte boundry to align allocated memory to
    * @return void* Address of newly allocated memory
    */
-  AllocatorStatus_t Allocate(size_t memory_size, size_t alignment, void **ptr);
+  Status_t Allocate(size_t memory_size, size_t alignment, void **ptr);
 
   /**
    * @brief Deallocate Memory
@@ -33,41 +37,23 @@ public:
    * 
    * @param ptr Returns nullptr
    */
-  AllocatorStatus_t Deallocate(void *ptr);
+  Status_t Deallocate(void *ptr);
 
-  inline size_t GetUsed() { return reinterpret_cast<uintptr_t>(current_address_) - reinterpret_cast<uintptr_t>(GetAllocatorStart());}
-  inline size_t GetRemaining() { return GetAllocatorSize() - GetUsed();}
-  inline bool   IsEnoughMemory(size_t memory_size) {return (GetRemaining() >= memory_size);}
 
-    /**
-   * @brief Clear Memory
-   * 
-   * Linear allocators can only be cleared. This Clear()
-   * method releases all allocated memory and resets members
-   * to initial state (0).
-   * 
-   */
-  void Clear();
+  bool EnoughMemory(size_t memory_size){return true;}
+  Status_t ClearMemory(); 
+  Status_t InitMemory(size_t memory_size);
 
-    
-  void Initialize(size_t memory_size);
 
   // TODO make private (needed for testing)
-  struct StackHeader
+  struct FreeListHeader
   {
     align::alignment_t alignment_offset;
   };
-  
+
 private:
-
-
-
-
-  void AddUsed(size_t memory_used);
-  void * current_address_;
+ 
+  llist::LList<BlockSize_t> block_list_;
 };
-
-
-
 
 } // namespace alloc

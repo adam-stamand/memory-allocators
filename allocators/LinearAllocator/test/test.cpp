@@ -53,7 +53,7 @@ static void AllocateMemory(
     AllocationTestBlock_t& curr_block,
     AllocationTestBlock_t* previous_block)
 {
-    AllocatorStatus_t status;
+    Status_t status;
     size_t previous_used;
     align::alignment_t adjusted_alignment;
 
@@ -98,7 +98,7 @@ static void DeallocateMemory(
     AllocationTestBlock_t& curr_block,
     AllocationTestBlock_t* previous_block)
 {
-    AllocatorStatus_t status;
+    Status_t status;
     
     status = linearAllocator.Deallocate(nullptr);
     ASSERT_EQ(status, kStatusFailure);
@@ -222,7 +222,7 @@ TEST(LinearAllocatorTest, AllocateRandomly)
 TEST(LinearAllocatorTest, AllocateTooMuch) 
 { 
     LinearAllocator linearAllocator(MEMORY_SIZE_INIT);
-    AllocatorStatus_t status;
+    Status_t status;
     void * curr_allocation;
 
     /* Ensure remaining size is init size */
@@ -242,7 +242,7 @@ TEST(LinearAllocatorTest, AllocateTooMuch)
 TEST(LinearAllocatorTest, AllocateInvalidInput) 
 { 
     LinearAllocator linearAllocator(MEMORY_SIZE_INIT);
-    AllocatorStatus_t status;
+    Status_t status;
     void * curr_allocation;
 
     /* Ensure remaining size is init size */

@@ -23,7 +23,7 @@ public:
    * @param alignment Define byte boundry to align allocated memory to
    * @return void* Address of newly allocated memory
    */
-  AllocatorStatus_t Allocate(size_t memory_size, size_t alignment, void **ptr);
+  Status_t Allocate(size_t memory_size, size_t alignment, void **ptr);
 
   /**
    * @brief Deallocate Memory
@@ -33,7 +33,7 @@ public:
    * 
    * @param ptr Returns nullptr
    */
-  AllocatorStatus_t Deallocate(void *ptr);
+  Status_t Deallocate(void *ptr);
 
 
   bool EnoughMemory(size_t memory_size){return RemainingMemory() >= memory_size;}
@@ -46,10 +46,10 @@ public:
    * to initial state (0).
    * 
    */
-   AllocatorStatus_t ClearMemory();
+   Status_t ClearMemory();
 
     
-  AllocatorStatus_t InitMemory(size_t memory_size);
+  Status_t InitMemory(size_t memory_size);
 
   // TODO make private (needed for testing)
   struct StackHeader
@@ -59,7 +59,7 @@ public:
   
 
 private:
-    inline void AdjustMemory(size_t memory_used){ AdjustMemoryInUse(memory_used); AdjustCurrentAddress(memory_used); };
+    inline void* AdjustMemory(size_t memory_used){ AdjustMemoryInUse(memory_used); AdjustCurrentAddress(memory_used); return current_address_;};
     inline void AdjustCurrentAddress(size_t adjustment){ current_address_ = ADD_TO_POINTER(current_address_, adjustment); }
     void * current_address_;
 };

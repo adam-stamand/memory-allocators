@@ -10,17 +10,17 @@ class TestAllocator : public alloc::BaseAllocator
 {
 public:
     TestAllocator(size_t memory_size):BaseAllocator(memory_size){}
-    AllocatorStatus_t Allocate(size_t size, size_t alignment, void ** ptr){return kStatusSuccess;}
-    AllocatorStatus_t Deallocate(void * ptr){return kStatusSuccess;}
+    Status_t Allocate(size_t size, size_t alignment, void ** ptr){return kStatusSuccess;}
+    Status_t Deallocate(void * ptr){return kStatusSuccess;}
     bool EnoughMemory(size_t memory_size){return kStatusSuccess;}
-    AllocatorStatus_t ClearMemory(){return kStatusSuccess;}
-    AllocatorStatus_t InitMemory(size_t memory_size){return kStatusSuccess;}
+    Status_t ClearMemory(){return kStatusSuccess;}
+    Status_t InitMemory(size_t memory_size){return kStatusSuccess;}
 };
 
 TEST(BaseAllocatorTest, Allocate) { 
     TestAllocator testAllocator(MEMORY_SIZE_INIT);
     
-    AllocatorStatus_t status = testAllocator.Allocate(0, 0, nullptr);
+    Status_t status = testAllocator.Allocate(0, 0, nullptr);
     ASSERT_EQ(status, kStatusSuccess);
 }
 
@@ -28,7 +28,7 @@ TEST(BaseAllocatorTest, Allocate) {
 TEST(BaseAllocatorTest, Deallocate) {
     TestAllocator testAllocator(MEMORY_SIZE_INIT);
     
-    AllocatorStatus_t status = testAllocator.Deallocate(nullptr);
+    Status_t status = testAllocator.Deallocate(nullptr);
     ASSERT_EQ(status, kStatusSuccess);
 }
 

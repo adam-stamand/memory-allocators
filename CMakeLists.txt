@@ -46,6 +46,7 @@ include(CTest)
 
 include_directories(lib)
 include_directories(lib/libalign/inc)
+include_directories(lib/libllist/inc)
 include_directories(utils/spdlog/include)
 include_directories(utils)
 include_directories(utils/gtest/googletest/include)
@@ -71,9 +72,11 @@ endforeach()
 
 # Include all of the sub projects
 add_subdirectory(lib/libalign)
+add_subdirectory(lib/libllist)
 add_subdirectory(example)
 add_subdirectory(allocators/)
 add_subdirectory(allocators/BaseAllocator)
 add_subdirectory(allocators/LinearAllocator)
 add_subdirectory(allocators/StackAllocator)
+add_subdirectory(allocators/FreeListAllocator)
 

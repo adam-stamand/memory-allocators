@@ -56,7 +56,7 @@ static void AllocateMemory(
     AllocationTestBlock_t& curr_block,
     AllocationTestBlock_t* previous_block)
 {
-    AllocatorStatus_t status;
+    Status_t status;
     size_t previous_used;
     align::alignment_t adjusted_alignment;
 
@@ -105,7 +105,7 @@ static void DeallocateMemory(
     AllocationTestBlock_t& curr_block,
     AllocationTestBlock_t* previous_block)
 {
-    AllocatorStatus_t status;
+    Status_t status;
     size_t previous_used;
     align::alignment_t adjusted_alignment;
     
@@ -256,7 +256,7 @@ TEST(StackAllocatorTest, AllocateRandomly)
 TEST(StackAllocatorTest, AllocateTooMuch) 
 { 
     StackAllocator stackAllocator(MEMORY_SIZE_INIT);
-    AllocatorStatus_t status;
+    Status_t status;
     void * curr_allocation;
 
     /* Ensure remaining size is init size */
@@ -276,7 +276,7 @@ TEST(StackAllocatorTest, AllocateTooMuch)
 TEST(StackAllocatorTest, AllocateInvalidInput) 
 { 
     StackAllocator stackAllocator(MEMORY_SIZE_INIT);
-    AllocatorStatus_t status;
+    Status_t status;
     void * curr_allocation;
 
     /* Ensure remaining size is init size */

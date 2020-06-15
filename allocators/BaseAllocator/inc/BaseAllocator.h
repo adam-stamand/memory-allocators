@@ -13,11 +13,11 @@ public:
     BaseAllocator(size_t memory_size);
     virtual ~BaseAllocator();
     
-    virtual AllocatorStatus_t Allocate(size_t size, size_t alignment, void ** ptr) = 0;
-    virtual AllocatorStatus_t Deallocate(void * ptr) = 0;
+    virtual Status_t Allocate(size_t size, size_t alignment, void ** ptr) = 0;
+    virtual Status_t Deallocate(void * ptr) = 0;
     virtual bool EnoughMemory(size_t memory_size) = 0;
-    virtual AllocatorStatus_t ClearMemory() = 0;
-    virtual AllocatorStatus_t InitMemory(size_t memory_size) = 0;
+    virtual Status_t ClearMemory() = 0;
+    virtual Status_t InitMemory(size_t memory_size) = 0;
 
     size_t RemainingMemory(){return bytes_remaining_;}
     size_t InUseMemory(){return bytes_in_use_;}
