@@ -5,8 +5,6 @@
 namespace alloc
 {
 
-static bool FindGreaterEqualThan(llist::LListNode<size_t>* iterate_node, llist::LListNode<size_t>* find_node)
-{return iterate_node->data_ >= find_node->data_ ;}
 
 
 FreeListAllocator::FreeListAllocator(size_t size) : 
@@ -33,114 +31,112 @@ Status_t FreeListAllocator::Allocate(size_t size, size_t alignment, void **ptr)
     
     if (alignment == 0 || size == 0)
     {
-        SPDLOG_DEBUG("Failed to allocate: Invalid alignment");
+        SPDLOG_DEBUG("Failed to allocate: Invalid alignment or size");
         return kStatusInvalidParam;
     }
 
-    while(true)
+    size_t adjusted_size;
+    llist::LListNode<BlockSize_t> * free_block = free_block_list_.GetHead();
+
+    /* Search for first free memory block that is of sufficient size */
+    while(free_block->next() != nullptr)
     {
-        llist::LListNode<BlockSize_t> temp_node;
-        llist::LListNode<BlockSize_t> * node_ptr;
-        temp_node.data_ = size;
-        node_ptr = block_list_.FindNode(FindGreaterEqualThan, &temp_node);
-
-        if (node_ptr == nullptr)
-        {
-            SPDLOG_WARN("Failed to allocate: Not enough memory left");
-            *ptr = nullptr;
-            return kStatusOutOfMemory;
-        }
-
         align::alignment_t alignment_adjustment = align::alignForwardAdjustmentWithHeader(
-            ADD_TO_POINTER(node_ptr, sizeof(llist::LListNode<BlockSize_t>)), 
+            free_block, 
             alignment, 
             sizeof(FreeListHeader));
-        if (node_ptr->data_ >= alignment_adjustment + size + sizeof(llist::LListNode<BlockSize_t>))
+        
+        adjusted_size = size + alignment_adjustment;
+        
+        if (free_block->data_ < adjusted_size)
         {
+            continue;
+        }
+
+        if (free_block->data_ - adjusted_size < MIN_BLOCK_SIZE)
+        {
+            /* Not enough memory for another free block; allocate the entire block*/
+            free_block_list_.RemoveNode(free_block);
+        }
+        else
+        {  
+            /* Enough memory for another free block; create another free block */
             llist::LListNode<size_t> * new_block = 
-                reinterpret_cast<llist::LListNode<size_t> *>(ADD_TO_POINTER(node_ptr, alignment_adjustment + size + sizeof(llist::LListNode<BlockSize_t>)));
+                reinterpret_cast<llist::LListNode<size_t> *>(ADD_TO_POINTER(free_block, adjusted_size));
             
-            new_block->data_ = node_ptr->data_ - alignment_adjustment + size + sizeof(llist::LListNode<BlockSize_t>);
+            new_block->data_ = free_block->data_ - adjusted_size;
             
-            /* Allocate memory and create a ne  w free block*/
-            block_list_.InsertNodeAfter(node_ptr, new_block);
+            free_block_list_.InsertNodeAfter(free_block, new_block);
+            free_block_list_.RemoveNode(free_block);
             break;
         }
+    
     }
 
-    /* Next allocation will align according to specified alignment */
+    AdjustMemoryInUse(adjusted_size);
 
-    // if (!IsEnoughMemory(size + alignment_adjustment))
-    // {
-    //     SPDLOG_WARN("Failed to allocate: Not enough memory left");
-    //     *ptr = nullptr;
-    //     return kStatusOutOfMemory;
-    // }
-
-    // /* Adjust for alignment (with header) first and set the callers pointer*/
-    // AddUsed(alignment_adjustment);
-    // *ptr = current_address_;
-
-    // /* Write the free_list header continuously previous to allocated memory */
-    // FreeListHeader* header_address = reinterpret_cast<FreeListHeader*>(reinterpret_cast<uintptr_t>(current_address_) - sizeof(FreeListHeader));
-    // header_address->alignment_offset = alignment_adjustment;
-
-    // /* Now allocate the requested memory size */
-    // AddUsed(size);
-
-    // SPDLOG_DEBUG("Allocation complete: allocated_address={} curr_address={} curr_used={}B",
-    //             *ptr, current_address_ , GetUsed());
+    SPDLOG_DEBUG("Allocation complete: allocated_address={} curr_used={}B",
+                reinterpret_cast<void*>(free_block), InUseMemory());
 
     return kStatusSuccess;
 }
 
 Status_t FreeListAllocator::Deallocate(void * ptr) 
 { 
-    // SPDLOG_DEBUG("Deallocating: curr_used={}B deallocating={}B",
-    //     GetUsed(), reinterpret_cast<uintptr_t>(current_address_) - reinterpret_cast<uintptr_t>(ptr));
-    
-    // if (ptr == nullptr)
-    // {
-    //     SPDLOG_DEBUG("Failed to allocate: Invalid pointer");
-    //     return kStatusInvalidParam;
-    // }
+    SPDLOG_DEBUG("Deallocating: curr_used={}B deallocating={}B",
+        InUseMemory(), reinterpret_cast<uintptr_t>(ptr));
 
-    // /* Locate the free_list header. It's kept contiguously ahead of block being deallocated */
-    // FreeListHeader * free_list_header = reinterpret_cast<FreeListHeader*>(reinterpret_cast<uintptr_t>(ptr) - sizeof(FreeListHeader));
-    
-    // /* Use the alignment offset to locate the end of previously allocated memory */
-    // current_address_ = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(ptr) - free_list_header->alignment_offset);
+    if (ptr == nullptr)
+    {
+        SPDLOG_DEBUG("Failed to allocate: Invalid pointer");
+        return kStatusInvalidParam;
+    }
 
-    // SPDLOG_DEBUG("Deallocation complete: deallocated_address={} curr_address={} curr_used={}B",
-    //             ptr, current_address_ , GetUsed());
+    /* Locate the alignment header. It's kept contiguously ahead of allocated block */
+    FreeListHeader * free_list_header = reinterpret_cast<FreeListHeader*>(reinterpret_cast<uintptr_t>(ptr) - sizeof(FreeListHeader));
+    
+    /* Use the header to find beginning of block and get block size */
+    llist::LListNode<BlockSize_t> * free_block = reinterpret_cast<llist::LListNode<BlockSize_t> *>(ADD_TO_POINTER(ptr, -1 * free_list_header->alignment_offset));
+    free_block->data_ = free_list_header->size;
+    
+    llist::LListNode<BlockSize_t> * next_block = free_block_list_.FindNode(FindSameNode, ADD_TO_POINTER(ptr, free_list_header->size));
+    llist::LListNode<BlockSize_t> * prev_block = free_block_list_.FindNode(FindSameNode, ADD_TO_POINTER(next_block->prev(), next_block->prev()->data_));
+    
+    /* Coalesce previous block (if it is free) */
+    if (prev_block != nullptr)
+    {
+        prev_block += free_block->data_;
+        free_block = prev_block;
+    }
+
+    /* Coalesce next block (if it is free) */
+    if (next_block != nullptr)
+    {
+        free_block->data_ += next_block->data_ ;
+        free_block_list_.InsertNodeBefore(next_block, free_block);
+        free_block_list_.RemoveNode(next_block);
+    }
+
+    AdjustMemoryInUse(-1 * free_block->data_);
+    
+    SPDLOG_DEBUG("Deallocation complete: deallocated_address={} curr_used={}B",
+                ptr, InUseMemory());
 
     return kStatusSuccess;
 }
 
 
 
-// void FreeListAllocator::AddUsed(size_t memory_used)
-// {
-    
-//     ASSERT(GetUsed() + memory_used <= GetAllocatorSize(), "Failed to add used: not enough memory left.");
+Status_t FreeListAllocator::ClearMemory()
+{
+    BaseAllocator::Finalize();
+    return kStatusSuccess;
+}
 
-//     current_address_ = reinterpret_cast<void*>( reinterpret_cast<uintptr_t>(current_address_) + memory_used );
-// }
-
-// void FreeListAllocator::Clear()
-// {
-//     Finalize();
-//     current_address_ = nullptr;
-//     SPDLOG_DEBUG("Memory cleared: curr_address={}", 
-//                  current_address_);
-// }
-
-// void FreeListAllocator::Initialize(size_t memory_size)
-// {
-//     BaseAllocator::Initialize(memory_size);
-//     current_address_ = GetAllocatorStart();
-//     SPDLOG_DEBUG("Memory Initialized: curr_address={}", 
-//                  current_address_);
-// }
+Status_t FreeListAllocator::InitMemory(size_t memory_size)
+{
+    BaseAllocator::Initialize(memory_size);
+    return kStatusSuccess;
+}
 
 } // namespace alloc

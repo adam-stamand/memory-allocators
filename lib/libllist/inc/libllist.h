@@ -18,6 +18,8 @@ class LListNode
 public:
     LListNode(){};
     T data_;
+    inline LListNode * next(){return next_;};
+    inline LListNode * prev(){return prev_;};
 private:
     LListNode * prev_;
     LListNode * next_;
@@ -32,19 +34,21 @@ public:
     LList();
     ~LList(){}
     
-    typedef bool (*CompareFunction_t)(LListNode<T>*, LListNode<T>*);
+    typedef bool (*CompareDataFunction_t)(LListNode<T>*, T&);
+    typedef bool (*CompareArgFunction_t)(LListNode<T>*, void*);
     typedef void (*PrintFunction_t)(LListNode<T>*);
-    Status_t AddFirstNode(LListNode<T>*);
-    Status_t AddLastNode(LListNode<T>*);
+    Status_t InsertHead(LListNode<T>*);
+    Status_t InsertTail(LListNode<T>*);
     Status_t InsertNodeAfter(LListNode<T>*,LListNode<T>*);
     Status_t InsertNodeBefore(LListNode<T>*,LListNode<T>*);
     Status_t RemoveNode(LListNode<T>*);
-    inline void RemoveFirstNode()   {if (head_==nullptr) return; if (head_==tail_){head_=nullptr;tail_=nullptr;return;} head_->next_->prev_ = nullptr; head_ = head_->next_;}
-    inline void RemoveLastNode()    {if (tail_==nullptr) return; if (head_==tail_){head_=nullptr;tail_=nullptr;return;} tail_->prev_->next_ = nullptr; tail_ = tail_->prev_;}
-    inline LListNode<T>* GetFirstNode(){return head_;}
-    inline LListNode<T>* GetLastNode(){return tail_;}
+    inline void RemoveHead()   {if (head_==nullptr) return; if (head_==tail_){head_=nullptr;tail_=nullptr;return;} head_->next_->prev_ = nullptr; head_ = head_->next_;}
+    inline void RemoveTail()    {if (tail_==nullptr) return; if (head_==tail_){head_=nullptr;tail_=nullptr;return;} tail_->prev_->next_ = nullptr; tail_ = tail_->prev_;}
+    inline LListNode<T>* GetHead(){return head_;}
+    inline LListNode<T>* GetTail(){return tail_;}
     void Clear() {head_=nullptr; tail_=nullptr;};
-    LListNode<T>* FindNode(CompareFunction_t,LListNode<T>*);
+    LListNode<T>* FindNode(CompareDataFunction_t,T&);
+    LListNode<T>* FindNode(CompareArgFunction_t,void*);
     void PrintList(PrintFunction_t);
     
 private:
@@ -63,7 +67,7 @@ LList<T>::LList() : head_(nullptr), tail_(nullptr){}
 
 
 template <class T>
-Status_t LList<T>::AddFirstNode(LListNode<T>* node)
+Status_t LList<T>::InsertHead(LListNode<T>* node)
 {
     if (node == nullptr)
     {
@@ -89,7 +93,7 @@ Status_t LList<T>::AddFirstNode(LListNode<T>* node)
     return kStatusSuccess;
 }
 template <class T>
-Status_t LList<T>::AddLastNode(LListNode<T>* node)
+Status_t LList<T>::InsertTail(LListNode<T>* node)
 {
     if (node == nullptr)
     {
@@ -123,10 +127,15 @@ Status_t LList<T>::InsertNodeAfter(LListNode<T>* existing_node, LListNode<T>* ne
     {
         return kStatusInvalidParam;
     }
+    
+    if (new_node == existing_node->next_)
+    {
+        return kStatusSuccess;
+    }
 
     if (existing_node->next_ == nullptr)
     {
-        status = AddLastNode(new_node);
+        status = InsertTail(new_node);
     }
     else
     {
@@ -150,9 +159,14 @@ Status_t LList<T>::InsertNodeBefore(LListNode<T>* existing_node, LListNode<T>* n
         return kStatusInvalidParam;
     }
 
+    if (new_node == existing_node->prev_)
+    {
+        return kStatusSuccess;
+    }
+
     if (existing_node->prev_ == nullptr)
     {
-        status = AddFirstNode(new_node);
+        status = InsertHead(new_node);
     }
     else
     {
@@ -178,11 +192,11 @@ Status_t LList<T>::RemoveNode(LListNode<T>* node)
 
     if (node == head_)
     {
-        RemoveFirstNode();
+        RemoveHead();
     }
     else if (node == tail_)
     {
-        RemoveLastNode();
+        RemoveTail();
     }
     else if (node->prev_ == nullptr || node->next_ == nullptr)
     {
@@ -200,13 +214,30 @@ Status_t LList<T>::RemoveNode(LListNode<T>* node)
 }
 
 template <class T>
-LListNode<T>* LList<T>::FindNode(CompareFunction_t func, LListNode<T>* node)
+LListNode<T>* LList<T>::FindNode(CompareDataFunction_t func, T& data)
 {
     LListNode<T>* temp = head_;
     
     while (temp != nullptr)
     {
-        if (func(temp, node))
+        if (func(temp, data))
+        {
+            return temp;
+        }
+
+        temp = temp->next_;
+    }
+    return nullptr;
+}
+
+template <class T>
+LListNode<T>* LList<T>::FindNode(CompareArgFunction_t func, void * arg)
+{
+    LListNode<T>* temp = head_;
+    
+    while (temp != nullptr)
+    {
+        if (func(temp, arg))
         {
             return temp;
         }

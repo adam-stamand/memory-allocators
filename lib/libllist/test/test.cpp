@@ -26,47 +26,43 @@ public:
   }
 };
 
-static bool FindGreaterThan(LListNode<size_t>* iterate_node, LListNode<size_t>* find_node)
-{return iterate_node->data_ >= find_node->data_ ;}
+static bool FindGreaterThan(LListNode<size_t>* iterate_node, size_t& data)
+{return iterate_node->data_ >= data;}
 
-static bool FindEqualTo(LListNode<size_t>* iterate_node, LListNode<size_t>* find_node)
-{return iterate_node->data_ == find_node->data_ ;}
+static bool FindEqualTo(LListNode<size_t>* iterate_node, size_t& data)
+{return iterate_node->data_ == data ;}
 
 static void PrintNode(LListNode<size_t>* node)
 {printf("Node: data=%lu ",node->data_);}
 
-static LListNode<size_t>* AddNewNode(LList<size_t>& list, size_t data)
+static LListNode<size_t>* InsertNewNodeHead(LList<size_t>& list, size_t data)
 {
     LListNode<size_t> * node;
     node = new(LListNode<size_t>);
     node->data_ = data;
-    list.AddFirstNode(node);
+    list.InsertHead(node);
     return node;
 }
 
 static LListNode<size_t> * CheckForEqualData(LList<size_t>& list, size_t data)
 {
-    LListNode<size_t> temp;
-    temp.data_ = data;
-    return  list.FindNode(FindEqualTo, &temp);
+    return  list.FindNode(FindEqualTo, data);
 }
 
 static LListNode<size_t> * CheckForGreaterData(LList<size_t>& list, size_t data)
 {
-    LListNode<size_t> temp;    
-    temp.data_ = data;
-    return list.FindNode(FindGreaterThan, &temp);
+    return list.FindNode(FindGreaterThan, data);
 }
 
-TEST(LListTest, AddNodes) { 
+TEST(LListTest, InsertNodesHead) { 
     LList<size_t> list;
     std::vector<LListNode<size_t> *> added_nodes;
     
-    /* Add nodes with predefined data */
+    /* Insert nodes with predefined data */
     for (auto& data : node_data)
     {
         LListNode<size_t> * temp_node;
-        temp_node = AddNewNode(list, data);
+        temp_node = InsertNewNodeHead(list, data);
         added_nodes.push_back(temp_node);
     }
 
@@ -103,23 +99,23 @@ TEST(LListTest, AddNodes) {
     for (auto& node : added_nodes)
     {
         LListNode<size_t> * find_node;
-        find_node = list.FindNode(FindEqualTo, node);
+        find_node = list.FindNode(FindEqualTo, node->data_);
         ASSERT_EQ(find_node, node);
     }    
 }
 
-TEST(LListTest, AddNodesRandomly) { 
+TEST(LListTest, InsertNodesRandomly) { 
     LList<size_t> list;
     srand( (unsigned)time(NULL) );
     std::vector<LListNode<size_t> *> added_nodes;
     std::vector<size_t> added_data;
 
-    /* Add nodes with random data */
+    /* Insert nodes with random data */
     for (unsigned int i = 0; i < MAX_RANDOM_TRIALS; i++)
     {
         LListNode<size_t> * temp_node;
         size_t temp_data = static_cast<size_t>((rand() % MAX_RANDOM_DATA_VAL));
-        temp_node = AddNewNode(list, temp_data);
+        temp_node = InsertNewNodeHead(list, temp_data);
         added_nodes.push_back(temp_node);
         added_data.push_back(temp_data);
     }
@@ -158,7 +154,7 @@ TEST(LListTest, AddNodesRandomly) {
     for (auto& node : added_nodes)
     {
         LListNode<size_t> * find_node;
-        find_node = list.FindNode(FindEqualTo, node);
+        find_node = list.FindNode(FindEqualTo, node->data_);
         ASSERT_EQ(find_node->data_, node->data_);
     }    
 }
@@ -172,7 +168,7 @@ TEST(LListTest, RemoveNodes) {
     for (auto& data : node_data)
     {
         LListNode<size_t> * temp_node;
-        temp_node = AddNewNode(list, data);
+        temp_node = InsertNewNodeHead(list, data);
         added_nodes.push_back(temp_node);
     }
 
@@ -189,7 +185,7 @@ TEST(LListTest, RemoveNodes) {
     for (auto& node : added_nodes)
     {
         LListNode<size_t> * find_node;
-        find_node = list.FindNode(FindEqualTo, node);
+        find_node = list.FindNode(FindEqualTo, node->data_);
         ASSERT_EQ(find_node, nullptr);
     }    
 }
@@ -202,7 +198,7 @@ TEST(LListTest, ClearNodes) {
     for (auto& data : node_data)
     {
         LListNode<size_t> * temp_node;
-        temp_node = AddNewNode(list, data);
+        temp_node = InsertNewNodeHead(list, data);
         added_nodes.push_back(temp_node);
     }
 
@@ -215,7 +211,7 @@ TEST(LListTest, ClearNodes) {
     for (auto& node : added_nodes)
     {
         LListNode<size_t> * find_node;
-        find_node = list.FindNode(FindEqualTo, node);
+        find_node = list.FindNode(FindEqualTo, node->data_);
         ASSERT_EQ(find_node, nullptr);
     }    
 }
@@ -227,12 +223,12 @@ TEST(LListTest, RemoveNodesRandomly) {
     Status_t status;
     std::vector<LListNode<size_t> *> added_nodes;
 
-    /* Add nodes with random data */
+    /* Insert nodes with random data */
     for (unsigned int i = 0; i < MAX_RANDOM_TRIALS; i++)
     {
         LListNode<size_t> * temp_node;
         size_t temp_data = static_cast<size_t>((rand() % MAX_RANDOM_DATA_VAL));
-        temp_node = AddNewNode(list, temp_data);
+        temp_node = InsertNewNodeHead(list, temp_data);
         added_nodes.push_back(temp_node);
     }
 
@@ -249,7 +245,7 @@ TEST(LListTest, RemoveNodesRandomly) {
     for (auto& node : added_nodes)
     {
         LListNode<size_t> * find_node;
-        find_node = list.FindNode(FindEqualTo, node);
+        find_node = list.FindNode(FindEqualTo, node->data_);
         ASSERT_EQ(find_node, nullptr);
     }    
 }
@@ -260,36 +256,36 @@ TEST(LListTest, InsertNodes) {
     LListNode<size_t> * node_ptr;
     std::vector<LListNode<size_t>> nodes(5);
 
-    list.AddLastNode(&nodes[0]);
-    list.AddLastNode(&nodes[1]);
-    list.AddLastNode(&nodes[3]);
+    list.InsertTail(&nodes[0]);
+    list.InsertTail(&nodes[1]);
+    list.InsertTail(&nodes[3]);
 
-    node_ptr = list.GetFirstNode();
+    node_ptr = list.GetHead();
     ASSERT_EQ(node_ptr, &nodes[0]);
     
-    node_ptr = list.GetLastNode();
+    node_ptr = list.GetTail();
     ASSERT_EQ(node_ptr, &nodes[3]);
 
     status = list.InsertNodeBefore(&nodes[3], &nodes[2]);
     ASSERT_EQ(status, kStatusSuccess);
 
 
-    node_ptr = list.GetLastNode();
+    node_ptr = list.GetTail();
     ASSERT_EQ(node_ptr, &nodes[3]);
     
-    list.RemoveLastNode();
-    node_ptr = list.GetLastNode();
+    list.RemoveTail();
+    node_ptr = list.GetTail();
     ASSERT_EQ(node_ptr, &nodes[2]);
 
     
-    list.RemoveFirstNode();
-    node_ptr = list.GetFirstNode();
+    list.RemoveHead();
+    node_ptr = list.GetHead();
     ASSERT_EQ(node_ptr, &nodes[1]);
  
     status = list.InsertNodeAfter(&nodes[1], &nodes[4]);
     ASSERT_EQ(status, kStatusSuccess);
-    list.RemoveFirstNode();
-    node_ptr = list.GetFirstNode();
+    list.RemoveHead();
+    node_ptr = list.GetHead();
     ASSERT_EQ(node_ptr, &nodes[4]);
  
 }
