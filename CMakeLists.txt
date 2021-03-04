@@ -9,9 +9,7 @@ You should create a separate directory for build files.
 ")
 endif()
 
-set(TOP_PROJECT_NAME memory_allocators)
-
-project(${TOP_PROJECT_NAME} LANGUAGES C CXX)
+project(memory_allocators LANGUAGES C CXX)
 
 # set default build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -54,7 +52,7 @@ include_directories(utils/benchmark/include)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 
-if(CMAKE_PROJECT_NAME STREQUAL TOP_PROJECT_NAME AND BUILD_TESTING)
+if(BUILD_TESTING)
   # Prevent overriding the parent project's compiler/linker
   # settings on Windows
   set( gtest_force_shared_crt ON CACHE BOOL "Always use msvcrt.dll" FORCE)
@@ -73,8 +71,6 @@ endforeach()
 # Include all of the sub projects
 add_subdirectory(lib/libalign)
 add_subdirectory(lib/libllist)
-add_subdirectory(example)
-add_subdirectory(allocators/)
 add_subdirectory(allocators/BaseAllocator)
 add_subdirectory(allocators/LinearAllocator)
 add_subdirectory(allocators/StackAllocator)
