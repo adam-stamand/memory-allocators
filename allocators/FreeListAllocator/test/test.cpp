@@ -52,10 +52,10 @@ TEST(FreelistAllocatorTest, Allocate)
     FreeListAllocator freeListAllocator(MEMORY_SIZE_INIT);
     std::vector<AllocationTestBlock_t> test_blocks;
     
-    for (auto& pair : allocation_pairs)
-    {   
+    // for (auto& pair : allocation_pairs)
+    // {   
 
-    }
+    // }
 }
 
 
