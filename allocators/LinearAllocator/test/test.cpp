@@ -1,7 +1,7 @@
-#include "Debug.h"
-#include "LinearAllocator.h"
+#include "Debug.hpp"
+#include "LinearAllocator.hpp"
 #include <gtest/gtest.h>
-#include <libalign.h>
+#include <libalign.hpp>
  
 using namespace alloc;
 

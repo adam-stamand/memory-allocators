@@ -1,8 +1,8 @@
 #pragma once
 
-#include <libalign.h>
-#include <libllist.h>
-#include "BaseAllocator.h"
+#include <libalign.hpp>
+#include <libllist.hpp>
+#include "BaseAllocator.hpp"
 
 namespace alloc
 {

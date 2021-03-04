@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include <status.h>
+#include <status.hpp>
 
 namespace llist{
 
@@ -50,7 +50,7 @@ public:
     LListNode<T>* FindNode(CompareDataFunction_t,T&);
     LListNode<T>* FindNode(CompareArgFunction_t,void*);
     void PrintList(PrintFunction_t);
-    
+    // Implement begin and end iterators so that STL algorithms can be used
 private:
     LListNode<T>* head_;
     LListNode<T>* tail_;

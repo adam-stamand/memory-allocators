@@ -1,6 +1,6 @@
-#include "FreeListAllocator.h"
-#include "Debug.h"
-#include <libalign.h>
+#include "FreeListAllocator.hpp"
+#include "Debug.hpp"
+#include <libalign.hpp>
 
 namespace alloc
 {

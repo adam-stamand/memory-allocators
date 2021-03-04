@@ -1,5 +1,5 @@
-#include "BaseAllocator.h"
-#include "Debug.h"
+#include "BaseAllocator.hpp"
+#include "Debug.hpp"
 
 using namespace alloc;
 

@@ -1,6 +1,6 @@
-#include "Debug.h"
-#include "FreeListAllocator.h"
-#include <libalign.h>
+#include "Debug.hpp"
+#include "FreeListAllocator.hpp"
+#include <libalign.hpp>
 #include <gtest/gtest.h>
 #include <vector>
 #include <stdlib.h>

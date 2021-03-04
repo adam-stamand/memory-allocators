@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Debug.h"
+#include "Debug.hpp"
 #include "LinearAllocator.h"
 #include <benchmark/benchmark.h>
 #include <vector>

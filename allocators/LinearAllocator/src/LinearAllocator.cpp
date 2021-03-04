@@ -1,6 +1,6 @@
-#include "LinearAllocator.h"
-#include "Debug.h"
-#include <libalign.h>
+#include "LinearAllocator.hpp"
+#include "Debug.hpp"
+#include <libalign.hpp>
 
 namespace alloc
 {

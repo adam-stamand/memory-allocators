@@ -1,5 +1,5 @@
-#include "Debug.h"
-#include "BaseAllocator.h"
+#include "Debug.hpp"
+#include "BaseAllocator.hpp"
 #include <gtest/gtest.h>
 using namespace alloc;
 

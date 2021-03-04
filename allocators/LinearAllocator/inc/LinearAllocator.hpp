@@ -1,7 +1,7 @@
 #pragma once
 
-#include <libalign.h>
-#include "BaseAllocator.h"
+#include <libalign.hpp>
+#include "BaseAllocator.hpp"
 
 namespace alloc
 {

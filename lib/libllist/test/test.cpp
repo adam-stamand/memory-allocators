@@ -1,5 +1,5 @@
-#include "Debug.h"
-#include <libllist.h>
+#include "Debug.hpp"
+#include <libllist.hpp>
 #include <gtest/gtest.h>
 #include <vector>
 #include <stdlib.h>

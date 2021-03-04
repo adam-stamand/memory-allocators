@@ -1,5 +1,5 @@
-#include "Debug.h"
-#include <libalign.h>
+#include "Debug.hpp"
+#include <libalign.hpp>
 #include <gtest/gtest.h>
 using namespace align;
 

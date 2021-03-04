@@ -1,6 +1,6 @@
-#include "Debug.h"
-#include "StackAllocator.h"
-#include <libalign.h>
+#include "Debug.hpp"
+#include "StackAllocator.hpp"
+#include <libalign.hpp>
 #include <gtest/gtest.h>
 #include <vector>
 #include <stdlib.h>
