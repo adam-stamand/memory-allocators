@@ -46,9 +46,8 @@ public:
       free_block_list_.begin(), 
       free_block_list_.end(), 
       [memory_size](const llist::LListNode<BlockSize_t>& node){return node.data_ >= memory_size;});
-    // return FindGreaterEqualThan, memory_size) != nullptr;
+
     return iter != free_block_list_.end();
-    
   }
   Status_t ClearMemory(); 
   Status_t InitMemory(size_t memory_size);
