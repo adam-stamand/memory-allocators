@@ -35,12 +35,11 @@ Status_t FreeListAllocator::Allocate(size_t size, size_t alignment, void **ptr)
         return kStatusInvalidParam;
     }
 
-    size_t adjusted_size;
+    size_t adjusted_size = 0;
     llist::LListNode<BlockSize_t> * free_block = free_block_list_.GetHead();
 
     /* Search for first free memory block that is of sufficient size */
-    while(free_block->next() != nullptr)
-    {
+    do {
         align::alignment_t alignment_adjustment = align::alignForwardAdjustmentWithHeader(
             free_block, 
             alignment, 
@@ -69,9 +68,8 @@ Status_t FreeListAllocator::Allocate(size_t size, size_t alignment, void **ptr)
             free_block_list_.InsertNodeAfter(free_block, new_block);
             free_block_list_.RemoveNode(free_block);
             break;
-        }
-    
-    }
+        } 
+    } while(free_block->next() != nullptr);
 
     AdjustMemoryInUse(adjusted_size);
 
@@ -98,23 +96,35 @@ Status_t FreeListAllocator::Deallocate(void * ptr)
     /* Use the header to find beginning of block and get block size */
     llist::LListNode<BlockSize_t> * free_block = reinterpret_cast<llist::LListNode<BlockSize_t> *>(ADD_TO_POINTER(ptr, -1 * free_list_header->alignment_offset));
     free_block->data_ = free_list_header->size;
-    
-    llist::LListNode<BlockSize_t> * next_block = free_block_list_.FindNode(FindSameNode, ADD_TO_POINTER(ptr, free_list_header->size));
-    llist::LListNode<BlockSize_t> * prev_block = free_block_list_.FindNode(FindSameNode, ADD_TO_POINTER(next_block->prev(), next_block->prev()->data_));
+
+    auto prev_iter = std::find_if(
+        free_block_list_.begin(),
+        free_block_list_.end(),
+        [free_block](const llist::LListNode<BlockSize_t>& node){return ((void*)ADD_TO_POINTER(&node, node.data_) == free_block);}
+    );
+
+    void* next_node_addr = ADD_TO_POINTER(ptr, free_list_header->size);
+    auto next_begin = prev_iter == free_block_list_.end() ? free_block_list_.begin() : prev_iter;
+    auto next_iter = std::find_if(
+        next_begin,
+        free_block_list_.end(),
+        [next_node_addr](const llist::LListNode<BlockSize_t>& node){return &node == next_node_addr;}
+    );
+
     
     /* Coalesce previous block (if it is free) */
-    if (prev_block != nullptr)
+    if (prev_iter != free_block_list_.end())
     {
-        prev_block += free_block->data_;
-        free_block = prev_block;
+        prev_iter->data_ += free_block->data_;
+        free_block = &(*prev_iter);
     }
 
     /* Coalesce next block (if it is free) */
-    if (next_block != nullptr)
+    if (next_iter != free_block_list_.end())
     {
-        free_block->data_ += next_block->data_ ;
-        free_block_list_.InsertNodeBefore(next_block, free_block);
-        free_block_list_.RemoveNode(next_block);
+        free_block->data_ += next_iter->data_ ;
+        free_block_list_.InsertNodeBefore(&(*next_iter), free_block);
+        free_block_list_.RemoveNode(&(*next_iter));
     }
 
     AdjustMemoryInUse(-1 * free_block->data_);

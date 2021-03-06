@@ -2,6 +2,7 @@
 
 #include <libalign.hpp>
 #include <libllist.hpp>
+#include <algorithm>
 #include "BaseAllocator.hpp"
 
 namespace alloc
@@ -19,10 +20,6 @@ class FreeListAllocator : public BaseAllocator
 public:
   FreeListAllocator(size_t memory_size);
   virtual ~FreeListAllocator();
-  
-  static bool FindGreaterEqualThan(llist::LListNode<size_t>* iterate_node, size_t& data) {return iterate_node->data_ >= data ;}
-  static bool FindSameNode(llist::LListNode<size_t>* iterate_node, void* find_node) {return iterate_node == find_node;}
-
 
   /**
    * @brief Allocate Memory
@@ -44,7 +41,15 @@ public:
   Status_t Deallocate(void *ptr);
 
 
-  bool EnoughMemory(size_t memory_size){return free_block_list_.FindNode(FindGreaterEqualThan, memory_size) != nullptr;}
+  bool EnoughMemory(size_t memory_size){
+    auto iter = std::find_if(
+      free_block_list_.begin(), 
+      free_block_list_.end(), 
+      [memory_size](const llist::LListNode<BlockSize_t>& node){return node.data_ >= memory_size;});
+    // return FindGreaterEqualThan, memory_size) != nullptr;
+    return iter != free_block_list_.end();
+    
+  }
   Status_t ClearMemory(); 
   Status_t InitMemory(size_t memory_size);
 

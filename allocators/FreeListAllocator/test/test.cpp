@@ -44,6 +44,55 @@ static std::vector<AllocationTestPair_t> allocation_pairs =
 };
 
 
+// static void AllocateMemory(
+//     FreeListAllocator & freeListAllocator, 
+//     AllocationTestBlock_t& curr_block,
+//     AllocationTestBlock_t* previous_block)
+// {
+//     Status_t status;
+//     size_t previous_used;
+//     align::alignment_t adjusted_alignment;
+    
+//     /* Perform next allocation */
+//     status = freeListAllocator.Allocate(
+//         curr_block.allocation_size, 
+//         curr_block.alignment, 
+//         &curr_block.allocation);
+//     ASSERT_EQ(status,kStatusSuccess);
+//     ASSERT_NE(curr_block.allocation, nullptr);
+
+//     /* Check that the allocated address is what we'd expect 
+//     *  (i.e. the previous allocated address, plus the memory previously allocated, 
+//     *  plus the adjusted alignment).*/
+//     if (previous_block->allocation == nullptr)
+//     {
+//         /* Calculate the adjusted alignment for the initial allocation */
+//         FreeListAllocator::FreeListHeader * header_address = 
+//             reinterpret_cast<FreeListAllocator::FreeListHeader*>(reinterpret_cast<uintptr_t>(curr_block.allocation) - sizeof(FreeListAllocator::FreeListHeader));
+//         adjusted_alignment = header_address->alignment_offset;
+//     }
+//     else
+//     {        
+//         /* Calculate the adjusted alignment for the previous allocation */
+//         adjusted_alignment = align::alignForwardAdjustmentWithHeader(
+//             reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(previous_block->allocation) + previous_block->allocation_size), 
+//             curr_block.alignment, 
+//             curr_block.header_size);
+
+//         ASSERT_EQ(
+//             reinterpret_cast<uintptr_t>(previous_block->allocation) + adjusted_alignment + previous_block->allocation_size, 
+//             reinterpret_cast<uintptr_t>(curr_block.allocation));
+//     }
+    
+//     /* Ensure used size and remaining size are correct */
+//     previous_used = freeListAllocator.InUseMemory();
+//     ASSERT_EQ(freeListAllocator.RemainingMemory(), MEMORY_SIZE_INIT - previous_used);
+
+//     /* Ensure used memory accounts for newly allocated memory plus adjusted alignment */
+//     ASSERT_EQ(freeListAllocator.InUseMemory(), previous_used + curr_block.allocation_size + adjusted_alignment);
+// }
+
+
 
 
 
@@ -54,7 +103,7 @@ TEST(FreelistAllocatorTest, Allocate)
     
     // for (auto& pair : allocation_pairs)
     // {   
-
+    //     AllocateMemory(freeListAllocator, test_blocks, pair)
     // }
 }
 

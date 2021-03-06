@@ -70,6 +70,7 @@ static void AllocateMemory(
         curr_block.alignment, 
         &curr_block.allocation);
     ASSERT_EQ(status,kStatusSuccess);
+    ASSERT_NE(curr_block.allocation, nullptr);
 
     /* Check that the allocated address is what we'd expect 
     *  (i.e. the previous allocated address, plus the memory previously allocated, 
@@ -80,8 +81,6 @@ static void AllocateMemory(
         StackAllocator::StackHeader * header_address = 
             reinterpret_cast<StackAllocator::StackHeader*>(reinterpret_cast<uintptr_t>(curr_block.allocation) - sizeof(StackAllocator::StackHeader));
         adjusted_alignment = header_address->alignment_offset;
-
-        ASSERT_NE(curr_block.allocation, nullptr);
     }
     else
     {        
@@ -96,7 +95,7 @@ static void AllocateMemory(
             reinterpret_cast<uintptr_t>(curr_block.allocation));
     }
     
-    /* Ensure used memory account for newly allocated memory plus adjusted alignment */
+    /* Ensure used memory accounts for newly allocated memory plus adjusted alignment */
     ASSERT_EQ(stackAllocator.InUseMemory(), previous_used + curr_block.allocation_size + adjusted_alignment);
 }
 

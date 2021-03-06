@@ -34,6 +34,32 @@ public:
     LList();
     ~LList(){}
     
+
+    struct Iterator 
+    {
+        using iterator_category = std::forward_iterator_tag;
+        using difference_type   = std::ptrdiff_t;
+        using value_type        = LListNode<T>;
+        using pointer           = LListNode<T>*;
+        using reference         = LListNode<T>&;
+
+        Iterator(pointer ptr) : ptr_(ptr) {}
+
+        reference operator*() const {return *ptr_;}
+        pointer operator->() {return ptr_;}
+        Iterator& operator++() {ptr_++; return *this;}
+        Iterator operator++(int) {Iterator tmp = *this; ++(*this); return tmp;}
+        friend bool operator==(const Iterator& a, const Iterator& b) {return a.ptr_ == b.ptr_;}
+        friend bool operator!=(const Iterator& a, const Iterator& b) {return a.ptr_ != b.ptr_;}
+
+    private:
+        pointer ptr_;
+    };
+
+    Iterator begin() {return Iterator(GetHead());}
+    Iterator end()   {return Iterator(GetTail());}
+
+
     typedef bool (*CompareDataFunction_t)(LListNode<T>*, T&);
     typedef bool (*CompareArgFunction_t)(LListNode<T>*, void*);
     typedef void (*PrintFunction_t)(LListNode<T>*);
@@ -47,10 +73,7 @@ public:
     inline LListNode<T>* GetHead(){return head_;}
     inline LListNode<T>* GetTail(){return tail_;}
     void Clear() {head_=nullptr; tail_=nullptr;};
-    LListNode<T>* FindNode(CompareDataFunction_t,T&);
-    LListNode<T>* FindNode(CompareArgFunction_t,void*);
     void PrintList(PrintFunction_t);
-    // Implement begin and end iterators so that STL algorithms can be used
 private:
     LListNode<T>* head_;
     LListNode<T>* tail_;
@@ -213,39 +236,6 @@ Status_t LList<T>::RemoveNode(LListNode<T>* node)
     return status;
 }
 
-template <class T>
-LListNode<T>* LList<T>::FindNode(CompareDataFunction_t func, T& data)
-{
-    LListNode<T>* temp = head_;
-    
-    while (temp != nullptr)
-    {
-        if (func(temp, data))
-        {
-            return temp;
-        }
-
-        temp = temp->next_;
-    }
-    return nullptr;
-}
-
-template <class T>
-LListNode<T>* LList<T>::FindNode(CompareArgFunction_t func, void * arg)
-{
-    LListNode<T>* temp = head_;
-    
-    while (temp != nullptr)
-    {
-        if (func(temp, arg))
-        {
-            return temp;
-        }
-
-        temp = temp->next_;
-    }
-    return nullptr;
-}
 
 template <class T>
 void LList<T>::PrintList(PrintFunction_t func)
