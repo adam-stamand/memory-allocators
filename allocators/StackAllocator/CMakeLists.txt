@@ -1,9 +1,9 @@
 allocator(
-    PROJ_NAME linear_allocator
-    LIB_NAME linear_allocator_lib
+    PROJ_NAME stack_allocator
+    LIB_NAME stack_allocator_lib
     TEST_DIR test/
     SOURCES
-        "src/LinearAllocator.cpp"
+        "src/StackAllocator.cpp"
     LIBS
         base_allocator_lib 
     INC

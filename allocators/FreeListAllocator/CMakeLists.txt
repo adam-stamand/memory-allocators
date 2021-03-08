@@ -1,9 +1,9 @@
 allocator(
-    PROJ_NAME linear_allocator
-    LIB_NAME linear_allocator_lib
+    PROJ_NAME free_list_allocator
+    LIB_NAME free_list_allocator_lib
     TEST_DIR test/
     SOURCES
-        "src/LinearAllocator.cpp"
+        "src/FreeListAllocator.cpp"
     LIBS
         base_allocator_lib 
     INC
