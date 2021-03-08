@@ -39,6 +39,8 @@ else(NOT WIN32)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 -Werror")
 endif (NOT WIN32)
 
+add_compile_options(-DSPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
+
 # Build tests. Remove 
 include(CTest)
 

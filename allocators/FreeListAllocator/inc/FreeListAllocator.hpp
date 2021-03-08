@@ -56,12 +56,13 @@ public:
   // TODO make private (needed for testing)
   struct FreeListHeader
   {
-    BlockSize_t size;
-    align::alignment_t alignment_offset;
+    BlockSize_t size; // Size of the allocated memory (i.e. excludes header and offset)
+    align::alignment_t alignment_offset; //> Number of bytes between beginning of free block and allocated address
   };
 
   static const size_t MIN_BLOCK_SIZE = sizeof(FreeListHeader) + sizeof(llist::LListNode<BlockSize_t>) + 1;
 
+  void PrintFreeBlockList(){free_block_list_.PrintList();}
 private:
  
   llist::LList<BlockSize_t> free_block_list_;
