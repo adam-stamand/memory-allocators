@@ -1,230 +1,63 @@
+notifications:
+  email:
+    recipients:
+      - adam.stamand@gmail.com
+    on_success: never
+    on_failure: change
+
 language: cpp
 
 sudo: required
+
 env:
   global:
     # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
     #   via the "travis encrypt" command using the project repo's public key
     - secure: "pXJb5PSUQfM/fwLibXLfAgP/qMRtzczjHFc7WL5PjW2ifEpbCZQwkSpA99DdOQy2+1TgAHec4KbaKWxxmLJd4RzV2JBoPaHGU9G1gCAZFh8BYwI3kSavajCWH88NORQumHFlJ0Ldu2wyxYawSrl7ewoqinltLh5TPIT5KsgbWxvHVeGaVXPBtASVWA8ZSF8Ad0vm5jUjljlwZMu/d7Y41KYxAawaA6GjCK2bKesooSUKGUHv8G/TfAWrtvO7MZn7YEUkC6Df5LwcTV61CZnbXKHxGpe0o5BR4xL9NekIsZXKEdaF2T89SRQ0o62+znYcuHYFX3bfXAxvNXv5LEe7/w6BmxdwwttdvpPv+7jxBbqlEpyXlj3NON/6jLMPjkLiqCN3gfB7LOfem4PSx/oRgeSzLnX1exb6tThjxu+vuRHYADiXgbMI7i8uD6ZL0Fs3qm05WNhLN7UmpQfRLBpQ21kn8zRmXraTfLsTo8utTW1XtTNmN3S2GK1ogDQUkOAi9aA1AwPtW7cRzeXEDyNRlwf4DqZnr+kkXzJLy9S0KmfkdImGI0egP9kCBa3THMLELQuEosqdi2eStJTbil9d4/hXcTN8+rpsmHIzV5tr/nBVjLfnTOkv2Ml2hzwHYOKNryC8DBXLnmKNAz+Uuw61lgweW/2DgzCRyGwimvvTwM4="
 
-
-matrix:
-  include:
-  - os: linux
-    dist: trusty
-    compiler: gcc
-    env:
-      - COMPILER=g++-4.8
-    before_script:
-      - ls
-    script:
-      - chmod +x ./scripts/build.sh # or do this locally and commit
-      - ./scripts/build.sh
-    addons:
-      apt:
-        sources: ['ubuntu-toolchain-r-test']
-        packages: [g++-4.8, valgrind]
-  - os: linux
-    dist: trusty
-    compiler: gcc
-    env:
-      - COMPILER=g++-4.9
-    before_script:
-      - ls
-    script:
-      - chmod +x ./scripts/build.sh # or do this locally and commit
-      - ./scripts/build.sh
-    addons:
-      apt:
-        sources: ['ubuntu-toolchain-r-test']
-        packages: [g++-4.9, valgrind]
-  - os: linux
-    dist: trusty
-    compiler: gcc
-    env:
-      - COMPILER=g++-5
-    before_script:
-      - ls
-    script:
-      - chmod +x ./scripts/build.sh # or do this locally and commit
-      - ./scripts/build.sh
-    addons:
-      apt:
-        sources: ['ubuntu-toolchain-r-test']
-        packages: [g++-5, valgrind]
-  - os: linux
-    dist: trusty
-    compiler: gcc
-    env:
-      - COMPILER=g++-6
-    before_script:
-      - ls
-    script:
-      - chmod +x ./scripts/build.sh # or do this locally and commit
-      - ./scripts/build.sh
-    addons:
-      apt:
-        sources: ['ubuntu-toolchain-r-test']
-        packages: [g++-6, valgrind]
-  - os: linux
-    dist: trusty
-    compiler: gcc
-    env:
-      - COMPILER=g++-7
-    after_success:
-      - cd ..
-      - ls
-      - coveralls -r ..  -i "src/" -i "test/"   --exclude "utils" --exclude "benchmark" --exclude "example" --exclude "build/CMakeFiles/memory_allocator.dir/"  --gcov-options '\-lp' --verbose
-      # - coveralls --gcov-options '\-lp'
-    addons:
-      apt:
-        sources: ['ubuntu-toolchain-r-test']
-        packages: [g++-7, valgrind]
-      # coverity_scan:
-      #   project:
-      #     name: "adam-stamand/memory-allocators"
-      #   notification_email: adam.stamand@gmail.com
-      #   build_command_prepend: ""
-      #   build_command: "cmake --build ."
-      #   branch_pattern: master
-
-before_install:
+install:
   - sudo apt-get -qq update
   - sudo apt-get install -y libgtest-dev valgrind cmake
-  - sudo wget https://github.com/google/googletest/archive/release-1.7.0.tar.gz
-  - sudo tar xf release-1.7.0.tar.gz
-  - cd googletest-release-1.7.0
-  - sudo cmake -DBUILD_SHARED_LIBS=ON .
-  - sudo make
-  - sudo cp -a include/gtest /usr/include
-  - sudo cp -a libgtest_main.so libgtest.so /usr/lib/
-  - which valgrind
-  - cd "${TRAVIS_BUILD_DIR}"
   - pip install --user cpp-coveralls
   - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+
 before_script:
   # Check versions of gcc, g++ and cmake
-  - gcc -v && g++ -v && cmake --version
+  - ${COMPILER} -v && cmake --version
   # Run your build commands next
   - mkdir -p build && cd build
-  - |
-    cmake .. \
-      --warn-uninitialized \
-      -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
-      -DCMAKE_CXX_STANDARD=$CPP
-  - cmake --build .
-  - echo $COVERITY_SCAN_TOKEN
+  - cmake -D CMAKE_CXX_COMPILER=${COMPILER} ../
+  - make all_tests -j 
+
 script:
-  - cd bin
-  - ls -l
-  - ./runTests
-  - valgrind ./memory_allocator
+  - ctest -D NightlyMemCheck
 
-notifications:
-  email:
-    on_success: never
-    on_failure: change
-
-
-
-
-# addons: &gcc48
-#   apt:
-#     packages:
-#       - g++-4.8
-#     sources:
-#       - ubuntu-toolchain-r-test
-
-# addons: &gcc7
-#   apt:
-#     packages:
-#       - g++-7
-#     sources:
-#       - ubuntu-toolchain-r-test
-
-# addons: &clang35
-#   apt:
-#     packages:
-#       - clang-3.5
-#     sources:
-#       - ubuntu-toolchain-r-test
-#       - llvm-toolchain-precise-3.5
-
-# addons: &clang6
-#   apt:
-#     packages:
-#       - clang-6.0
-#     sources:
-#       - ubuntu-toolchain-r-test
-#       - llvm-toolchain-trusty-6.0
-
-
-# matrix:
-#   include:
-#     # Test gcc-4.8: C++11, Build=Debug/Release
-#     - env: GCC_VERSION=4.8 BUILD_TYPE=Debug CPP=11
-#       os: linux
-#       addons: *gcc48
-
-#     - env: GCC_VERSION=4.8 BUILD_TYPE=Release CPP=11
-#       os: linux
-#       addons: *gcc48
-
-#     - env: GCC_VERSION=7 BUILD_TYPE=Release CPP=11
-#       os: linux
-#       addons: *gcc7
-
-#     # Test clang-3.5: C++11, Build=Debug/Release
-#     - env: CLANG_VERSION=3.5 BUILD_TYPE=Debug CPP=11
-#       os: linux
-#       addons: *clang35
-
-#     - env: CLANG_VERSION=3.5 BUILD_TYPE=Release CPP=11
-#       os: linux
-#       addons: *clang35
-
-#       # Test clang-6.0: C++11, Build=Debug, ASAN=On
-#     - env: CLANG_VERSION=6.0 BUILD_TYPE=Debug CPP=11 ASAN=On TSAN=Off
-#       os: linux
-#       addons: *clang6
-
-#     - env: CLANG_VERSION=6.0 BUILD_TYPE=Release CPP=11 ASAN=On TSAN=Off
-#       os: linux
-#       addons: *clang6
-
-#       # osx
-#     - env: BUILD_TYPE=Release CPP=11 ASAN=Off TSAN=Off
-#       os: osx
-
-
-
-
-# before_script:
-#   - if [ -n "$GCC_VERSION" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
-#   - if [ -n "$CLANG_VERSION" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
-#   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export CXX="clang++" CC="clang"; fi
-#   - which $CXX
-#   - which $CC
-#   - $CXX --version
-#   - cmake --version
-
-# script:
-#   - cd ${TRAVIS_BUILD_DIR}
-#   - mkdir -p build && cd build
-#   - |
-#     cmake .. \
-#       --warn-uninitialized \
-#       -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
-#       -DCMAKE_CXX_STANDARD=$CPP \
-#       -DSPDLOG_BUILD_EXAMPLES=ON \
-#       -DSPDLOG_BUILD_BENCH=OFF \
-#       -DSPDLOG_BUILD_TESTS=ON \
-#       -DSPDLOG_SANITIZE_ADDRESS=$ASAN \
-#       -DSPDLOG_SANITIZE_THREAD=$TSAN
-#   - make VERBOSE=1 -j2 && cd bin
-#   - runTests
-
-
-
-# notifications:
-#   email: false
+matrix:
+    - os: linux
+      dist: bionic
+      compiler: gcc
+      env:
+        - COMPILER=g++-6
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: [g++-6, valgrind]
+    - os: linux
+      dist: bionic
+      compiler: gcc
+      env:
+        - COMPILER=g++-7
+      after_success:
+        - cd ..
+        - coveralls --include "allocators/" --include "lib/" --gcov-options '\-lp' --root . --verbose
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: [g++-7, valgrind]
+        coverity_scan:
+          project:
+            name: "adam-stamand/memory-allocators"
+          notification_email: adam.stamand@gmail.com
+          build_command_prepend: ""
+          build_command: "cmake --build ."
+          branch_pattern: master

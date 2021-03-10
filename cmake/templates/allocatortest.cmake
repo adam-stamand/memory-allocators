@@ -22,6 +22,6 @@ function(allocatortest)
             "--gtest_shuffle"
             "--gtest_output=xml:${CMAKE_BINARY_DIR}/reports/${test_TEST}.xml"
     )
+    add_dependencies(${TEST_TARGET} ${args_EXEC_NAME}) # add test to all test target 
     add_test(NAME ${args_TEST_NAME} COMMAND ${args_EXEC_NAME} ${test_FLAGS})
-    
 endfunction()

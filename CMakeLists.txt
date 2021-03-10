@@ -21,12 +21,11 @@ endif()
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin") 
+
 # cmake config options
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-########################################
 # Set up the compiler flags
-########################################
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0") # debug, no optimisation
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage") # enabling coverage
@@ -39,11 +38,8 @@ else(NOT WIN32)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 -Werror")
 endif (NOT WIN32)
 
-add_compile_options(-DSPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
 
-# Build tests. Remove 
 include(CTest)
-
 include_directories(lib)
 include_directories(lib/libalign/inc)
 include_directories(lib/libllist/inc)
@@ -59,6 +55,8 @@ if(BUILD_TESTING)
   # settings on Windows
   set( gtest_force_shared_crt ON CACHE BOOL "Always use msvcrt.dll" FORCE)
   add_subdirectory(utils/gtest)
+  set (TEST_TARGET "all_tests")
+  add_custom_target(${TEST_TARGET} ALL)
 endif()
 
 # Include helper scripts
@@ -70,6 +68,8 @@ foreach(dir ${cmake_dirs})
     endforeach()
 endforeach()
 
+set( CTEST_MEMORYCHECK_COMMAND valgrind )
+
 # Include all of the sub projects
 add_subdirectory(lib/libalign)
 add_subdirectory(lib/libllist)
@@ -77,4 +77,3 @@ add_subdirectory(allocators/BaseAllocator)
 add_subdirectory(allocators/LinearAllocator)
 add_subdirectory(allocators/StackAllocator)
 add_subdirectory(allocators/FreeListAllocator)
-

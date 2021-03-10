@@ -6,7 +6,7 @@ include_directories(inc)
  
 
 # Only build tests if testing is enabled and if not inside another project
-if(CMAKE_PROJECT_NAME STREQUAL TOP_PROJECT_NAME AND BUILD_TESTING)
+if(BUILD_TESTING)
     add_subdirectory(test)
 endif()
 
