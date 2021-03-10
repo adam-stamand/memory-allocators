@@ -23,5 +23,6 @@ function(allocatortest)
             "--gtest_output=xml:${CMAKE_BINARY_DIR}/reports/${test_TEST}.xml"
     )
     add_test(NAME ${args_TEST_NAME} COMMAND ${args_EXEC_NAME} ${test_FLAGS})
+    add_test(NAME ${TEST_TARGET} COMMAND ${args_EXEC_NAME} ${test_FLAGS})
     
 endfunction()
