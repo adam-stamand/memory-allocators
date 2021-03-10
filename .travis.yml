@@ -27,7 +27,7 @@ before_script:
   # Run your build commands next
   - mkdir -p build && cd build
   - cmake ..
-  - make all_tests
+  - make all_tests -j 
 
 script:
   - cd bin
@@ -36,7 +36,7 @@ script:
 matrix:
   include:
     - os: linux
-      dist: trusty
+      dist: bionic
       compiler: gcc
       env:
         - COMPILER=g++-4.8
@@ -45,7 +45,7 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: [g++-4.8, valgrind]
     - os: linux
-      dist: trusty
+      dist: bionic
       compiler: gcc
       env:
         - COMPILER=g++-4.9
@@ -54,7 +54,7 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: [g++-4.9, valgrind]
     - os: linux
-      dist: trusty
+      dist: bionic
       compiler: gcc
       env:
         - COMPILER=g++-5
@@ -63,7 +63,7 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: [g++-5, valgrind]
     - os: linux
-      dist: trusty
+      dist: bionic
       compiler: gcc
       env:
         - COMPILER=g++-6
@@ -72,7 +72,7 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: [g++-6, valgrind]
     - os: linux
-      dist: trusty
+      dist: bionic
       compiler: gcc
       env:
         - COMPILER=g++-7
