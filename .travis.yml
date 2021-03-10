@@ -23,45 +23,16 @@ install:
 
 before_script:
   # Check versions of gcc, g++ and cmake
-  - gcc -v && g++ -v && cmake --version
+  - ${COMPILER} -v && cmake --version
   # Run your build commands next
   - mkdir -p build && cd build
-  - cmake ..
+  - cmake -D CMAKE_CXX_COMPILER=${COMPILER} ../
   - make all_tests -j 
 
 script:
-  - cd bin
   - ctest -D NightlyMemCheck
 
 matrix:
-  include:
-    - os: linux
-      dist: bionic
-      compiler: gcc
-      env:
-        - COMPILER=g++-4.8
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: [g++-4.8, valgrind]
-    - os: linux
-      dist: bionic
-      compiler: gcc
-      env:
-        - COMPILER=g++-4.9
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: [g++-4.9, valgrind]
-    - os: linux
-      dist: bionic
-      compiler: gcc
-      env:
-        - COMPILER=g++-5
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: [g++-5, valgrind]
     - os: linux
       dist: bionic
       compiler: gcc
