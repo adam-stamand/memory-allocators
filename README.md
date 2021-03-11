@@ -24,5 +24,5 @@ This project is intended to be an example of both an implementation of several m
 ### Code Management Tools
 * Continuous Integration (TravisCI)
 * Coverity Check (Synopsys)
-* Documentation (Sphinx)
+* Documentation (Sphinx/ReadTheDocs)
 * Code Coverage (Coveralls)
