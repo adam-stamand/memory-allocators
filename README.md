@@ -4,6 +4,8 @@
 <a href='https://coveralls.io/github/adam-stamand/memory-allocators?branch=master'><img src='https://coveralls.io/repos/github/adam-stamand/memory-allocators/badge.svg?branch=master' alt='Coverage Status' /></a>
 [![GitHub issues](https://img.shields.io/github/issues/adam-stamand/memory-allocators)](https://github.com/adam-stamand/memory-allocators/issues)
 [![GitHub license](https://img.shields.io/github/license/adam-stamand/memory-allocators)](https://github.com/adam-stamand/memory-allocators/blob/master/LICENSE)
+[![Release](https://img.shields.io/github/v/release/adam-stamand/memory-allocators.svg)](https://github.com/adam-stamand/memory-allocators/releases)
+
 <a href="https://scan.coverity.com/projects/adam-stamand-memory-allocators">
   <img alt="Coverity Scan Build Status"
        src="https://img.shields.io/coverity/scan/18982.svg"/>
