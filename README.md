@@ -1,7 +1,7 @@
 # Memory Allocators
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4a0d9fba79e54da3af6d254157237959)](https://app.codacy.com/app/adam-stamand/memory-allocators?utm_source=github.com&utm_medium=referral&utm_content=adam-stamand/memory-allocators&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://www.travis-ci.com/adam-stamand/memory-allocators.svg?branch=master)](https://www.travis-ci.com/adam-stamand/memory-allocators)
-<a href='https://coveralls.io/github/adam-stamand/memory-allocators?branch=master'><img src='https://coveralls.io/repos/github/adam-stamand/memory-allocators/badge.svg?branch=master' alt='Coverage Status' /></a>
+[![Coverage Status](https://coveralls.io/repos/github/adam-stamand/memory-allocators/badge.svg?branch=master)](https://coveralls.io/github/adam-stamand/memory-allocators?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/memory-allocators/badge/?version=latest)](https://memory-allocators.readthedocs.io/en/latest/?badge=latest)
 [![GitHub issues](https://img.shields.io/github/issues/adam-stamand/memory-allocators)](https://github.com/adam-stamand/memory-allocators/issues)
 [![GitHub license](https://img.shields.io/github/license/adam-stamand/memory-allocators)](https://github.com/adam-stamand/memory-allocators/blob/master/LICENSE)
