@@ -18,7 +18,7 @@ This project is intended to be an example of both an implementation of several m
 * Linear Allocator
 * Stack Allocator
 * Free List Allocator
-* More to come... 
+* More to come ... 
 
 
 ### Code Management Tools
